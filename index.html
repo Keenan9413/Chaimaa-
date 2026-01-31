@@ -31,8 +31,6 @@ body{
   z-index:10;
 }
 
-.card h1,.card p{z-index:20;position:relative}
-
 /* ===== BOUTONS ===== */
 button{
   padding:12px 22px;
@@ -42,12 +40,11 @@ button{
   cursor:pointer;
   margin:10px;
 }
-
 #yes{background:#ff4081;color:white;}
 #no{background:#ccc;position:absolute}
 
-/* ===== ENVELOPPE ===== */
-.envelope{
+/* ===== ENVELOPPE INTRO ===== */
+.envelopeIntro{
   width:200px;
   cursor:pointer;
   animation:bounce 1.4s infinite;
@@ -68,7 +65,6 @@ button{
   from{transform:scale(1);}
   to{transform:scale(1.06);}
 }
-
 .hackBox{animation:shake .12s infinite;}
 @keyframes shake{
   0%{transform:translate(0,0);}
@@ -77,31 +73,6 @@ button{
   75%{transform:translate(4px,4px);}
   100%{transform:translate(0,0);}
 }
-
-.hackTop{
-  font-size:26px;
-  font-weight:bold;
-  margin-bottom:10px;
-}
-
-.hackFixed{
-  font-size:14px;
-  font-weight:bold;
-}
-
-.alert{
-  position:absolute;
-  color:red;
-  font-size:13px;
-  font-weight:bold;
-  animation:flash .4s infinite;
-}
-@keyframes flash{
-  0%{opacity:1;}
-  50%{opacity:0;}
-  100%{opacity:1;}
-}
-
 .progress{
   width:100%;
   height:14px;
@@ -116,40 +87,83 @@ button{
   background:red;
   transition:width .7s linear;
 }
-
-/* ===== TEXTE PROGRESSION HACK ===== */
 .hackProgressText{
-  display:none;
   margin-top:10px;
   font-size:13px;
   font-weight:bold;
   color:red;
-  letter-spacing:1px;
   animation:flash .6s infinite;
 }
+@keyframes flash{
+  0%,100%{opacity:1;}
+  50%{opacity:0;}
+}
 
-/* ===== FINAL ===== */
-#final h1{color:#ff4081;font-size:32px}
-#final p{color:#ff4081;font-size:18px}
+/* ===== ENVELOPPE FINALE ===== */
+#finalEnvelope{
+  display:none;
+  background:none;
+  box-shadow:none;
+}
+
+.envelopeBox{
+  width:260px;
+  height:170px;
+  position:relative;
+  background:#fff;
+  border-radius:14px;
+  overflow:hidden;
+}
+
+.flap{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#ff5fa2;
+  clip-path:polygon(0 0,100% 0,50% 55%);
+  transform-origin:top;
+  animation:openFlap 1.2s ease forwards;
+}
+
+.letter{
+  position:absolute;
+  bottom:-100%;
+  width:100%;
+  height:100%;
+  background:#ffd6e8;
+  text-align:center;
+  padding-top:35px;
+  animation:letterUp 1.2s ease forwards;
+  animation-delay:1s;
+}
+
+@keyframes openFlap{
+  to{transform:rotateX(180deg)}
+}
+@keyframes letterUp{
+  to{bottom:0}
+}
+
+.letter h1{color:#ff4081;font-size:30px}
+.letter p{color:#ff4081;font-size:18px}
 
 /* ===== CŒURS ===== */
 .heart{
   position:absolute;
-  z-index:15;
-  opacity:.45;
   animation:heartFloat 5s ease-out forwards;
 }
 @keyframes heartFloat{
   0%{transform:translateY(20px) scale(.5);opacity:0}
-  20%{opacity:.5}
-  80%{opacity:.5}
+  20%{opacity:.6}
+  80%{opacity:.6}
   100%{transform:translateY(-60px) scale(1);opacity:0}
 }
 
 /* ===== CONFETTIS ===== */
 .confetti{
   position:absolute;
-  z-index:1;
   animation:confettiSpin 6s linear forwards;
 }
 @keyframes confettiSpin{
@@ -165,7 +179,7 @@ button{
 <div class="card" id="intro">
   <h1>Pour Chaimaa ❤️</h1>
   <p>Clique sur l’enveloppe</p>
-  <img src="IMG_5431.jpeg" class="envelope" onclick="openLetter()">
+  <img src="IMG_5431.jpeg" class="envelopeIntro" onclick="openLetter()">
 </div>
 
 <!-- QUESTION -->
@@ -178,26 +192,22 @@ button{
 <!-- HACK -->
 <div class="card" id="hack">
   <div class="hackBox">
-    <div class="hackTop" id="hackTop">TRÈS BIEN</div>
-    <div class="hackFixed">
-      TRÈS BIEN JE VAIS TE HACKER MAINTENANT<br>
-      C’EST TANT PIS POUR TOI ⚠️
-    </div>
-
-    <div class="progress">
-      <div class="bar" id="bar"></div>
-    </div>
-
-    <div class="hackProgressText" id="hackProgressText">
-      HACK PROGRESS: LOADING...
-    </div>
+    <h2 id="hackTop">TRÈS BIEN</h2>
+    <p>JE VAIS TE HACKER MAINTENANT ⚠️</p>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="hackProgressText">HACK PROGRESS…</div>
   </div>
 </div>
 
-<!-- FINAL -->
-<div class="card" id="final">
-  <h1>Je t’aime ❤️</h1>
-  <p>Joyeuse Saint Chaimaa Beauté 💖</p>
+<!-- ENVELOPPE FINALE -->
+<div class="card" id="finalEnvelope">
+  <div class="envelopeBox">
+    <div class="flap"></div>
+    <div class="letter">
+      <h1>Je t’aime ❤️</h1>
+      <p>Joyeuse Saint Chaimaa Beauté 💖</p>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -206,19 +216,10 @@ const questions=[
   "Réfléchis bien… 😘",
   "T’es sûre ? 🤍"
 ];
-
 const hackMsgs=[
-  "TRÈS BIEN",
-  "JE VAIS TE HACKER",
-  "MAINTENANT",
-  "⚠️ HACK EN COURS ⚠️",
-  "SYSTÈME COMPROMIS",
-  "ERREUR SYSTÈME",
-  "SYSTÈME HS"
+  "TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","ERREUR","TERMINÉ"
 ];
-
-let qStep=0, hStep=0;
-let hearts=[], confettis=[];
+let q=0,h=0;
 
 window.onload=()=>intro.style.display="block";
 
@@ -228,9 +229,9 @@ function openLetter(){
 }
 
 function nextQuestion(){
-  qStep++;
-  if(qStep<questions.length){
-    qText.innerText=questions[qStep];
+  q++;
+  if(q<questions.length){
+    qText.innerText=questions[q];
   }else{
     question.style.display="none";
     startHack();
@@ -239,76 +240,48 @@ function nextQuestion(){
 
 function startHack(){
   hack.style.display="block";
-
-  // 🔥 AFFICHAGE FORCÉ DU TEXTE
-  document.getElementById("hackProgressText").style.display="block";
-
-  spawnAlerts();
-  const interval=setInterval(()=>{
-    hackTop.innerText=hackMsgs[hStep];
-    bar.style.width=((hStep+1)/hackMsgs.length)*100+"%";
-    hStep++;
-    if(hStep>=hackMsgs.length){
-      clearInterval(interval);
-      setTimeout(showFinal,900);
+  const i=setInterval(()=>{
+    hackTop.innerText=hackMsgs[h];
+    bar.style.width=((h+1)/hackMsgs.length)*100+"%";
+    h++;
+    if(h>=hackMsgs.length){
+      clearInterval(i);
+      setTimeout(showFinal,1000);
     }
   },900);
 }
 
-function spawnAlerts(){
-  for(let i=0;i<15;i++){
-    const a=document.createElement("div");
-    a.className="alert";
-    a.innerText="⚠️ ALERT ⚠️";
-    a.style.left=Math.random()*100+"%";
-    a.style.top=Math.random()*100+"%";
-    hack.appendChild(a);
-    setTimeout(()=>a.remove(),2000);
-  }
-}
-
 function showFinal(){
   hack.style.display="none";
-  final.style.display="block";
+  finalEnvelope.style.display="block";
   setInterval(spawnHeart,350);
   setInterval(spawnConfetti,300);
 }
 
 function spawnHeart(){
-  if(hearts.length>=25){hearts.shift().remove();}
   const h=document.createElement("div");
   h.className="heart";
   h.innerHTML="❤️";
   h.style.left=Math.random()*80+"%";
-  h.style.top=Math.random()*70+"%";
-  h.style.fontSize=18+Math.random()*18+"px";
-  final.appendChild(h);
-  hearts.push(h);
-  setTimeout(()=>{h.remove();hearts=hearts.filter(e=>e!==h)},5000);
+  h.style.top=Math.random()*80+"%";
+  h.style.fontSize=18+Math.random()*20+"px";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),5000);
 }
 
 function spawnConfetti(){
-  if(confettis.length>=50){
-    confettis.shift().remove();
-  }
   const c=document.createElement("div");
   c.className="confetti";
   c.innerHTML="❤️";
-  c.style.position="fixed";
   c.style.left=Math.random()*100+"vw";
   c.style.top=Math.random()*100+"vh";
-  c.style.fontSize=14+Math.random()*22+"px";
-  c.style.zIndex="2";
+  c.style.fontSize=14+Math.random()*20+"px";
   document.body.appendChild(c);
-  confettis.push(c);
-  setTimeout(()=>{
-    c.remove();
-    confettis=confettis.filter(e=>e!==c);
-  },6000);
+  setTimeout(()=>c.remove(),6000);
 }
 
 function moveNo(){
-  no.style.transform=`translate(${Math.random()*140-70}px,${Math.random()*80-40}px)`;
+  no.style.transform=`translate(${Math.random()*120-60}px,${Math.random()*80-40}px)`;
 }
 </script>
 
