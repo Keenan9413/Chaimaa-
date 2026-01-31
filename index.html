@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💖 Valentine</title>
+<title>💖 Pour Chaimaa</title>
 
 <style>
 body {
@@ -13,36 +13,65 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Arial', sans-serif;
+  font-family: Arial, sans-serif;
   overflow: hidden;
 }
 
-.card {
-  background: white;
-  padding: 30px;
-  border-radius: 20px;
+.container {
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  max-width: 90%;
+  color: white;
 }
 
-h1 {
-  color: #ff4081;
+.envelope {
+  font-size: 80px;
+  cursor: pointer;
+  animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.letter {
+  display: none;
+  background: white;
+  color: black;
+  padding: 25px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 350px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  transform: scaleY(0);
+  transform-origin: top;
+  animation: unfold 0.8s forwards;
+}
+
+@keyframes unfold {
+  to { transform: scaleY(1); }
+}
+
+.letter h2 {
+  font-size: 16px;
+  color: #555;
+}
+
+.main-text {
+  font-size: 20px;
+  margin: 20px 0;
 }
 
 .buttons {
-  margin-top: 25px;
   position: relative;
-  height: 120px;
+  height: 80px;
 }
 
 button {
-  padding: 12px 25px;
-  font-size: 18px;
+  padding: 10px 20px;
+  font-size: 16px;
   border: none;
-  border-radius: 30px;
+  border-radius: 20px;
   cursor: pointer;
-  transition: transform 0.2s;
 }
 
 #yes {
@@ -53,10 +82,121 @@ button {
 #no {
   background: #ddd;
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 0;
+}
+
+.heart {
+  position: absolute;
+  color: pink;
+  font-size: 20px;
+  animation: fall 5s linear forwards;
+}
+
+@keyframes fall {
+  from { transform: translateY(-10vh); opacity: 1; }
+  to { transform: translateY(110vh); opacity: 0; }
+}
+
+.final {
+  display: none;
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.final h1 {
+  color: red;
+}
+
+.final p {
+  color: hotpink;
+  font-size: 18px;
 }
 </style>
 </head>
 
 <body>
+
+<div class="container" id="start">
+  <h1>Pour Chaimaa Amirat 💌</h1>
+  <p>Clique sur l’enveloppe</p>
+  <div class="envelope" onclick="openLetter()">✉️</div>
+</div>
+
+<div class="letter" id="letter">
+  <h2>De Keenan, l’amour de ta vie ❤️</h2>
+  <div class="main-text" id="message">Veux-tu être ma future femme ?</div>
+  <div class="buttons">
+    <button id="yes" onclick="yesClick()">Oui ❤️</button>
+    <button id="no" onmouseover="moveNo()">Non 😔</button>
+  </div>
+</div>
+
+<div class="final" id="final">
+  <h1>Je t’aime ❤️</h1>
+  <p>Tu as fait mon bonheur ! ❤️</p>
+</div>
+
+<script>
+let step = 0;
+const messages = [
+  "Veux-tu être ma future femme ?",
+  "T’es sûre 🤗",
+  "Re-réfléchis… 🫣"
+];
+
+function vibrate() {
+  if (navigator.vibrate) navigator.vibrate(200);
+}
+
+function openLetter() {
+  document.getElementById("start").style.display = "none";
+  document.getElementById("letter").style.display = "block";
+  setInterval(createHeart, 500);
+}
+
+function yesClick() {
+  vibrate();
+  step++;
+  if (step < messages.length) {
+    document.getElementById("message").innerText = messages[step];
+  } else {
+    document.getElementById("letter").style.display = "none";
+    document.getElementById("final").style.display = "block";
+    confetti();
+  }
+}
+
+function moveNo() {
+  const x = Math.random() * 120;
+  const y = Math.random() * 40;
+  document.getElementById("no").style.transform = `translate(-${x}px, ${y}px)`;
+}
+
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerText = "💗";
+  heart.style.left = Math.random() * 100 + "vw";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 5000);
+}
+
+function confetti() {
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement("div");
+    c.innerText = "🎉";
+    c.style.position = "absolute";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.top = "-20px";
+    c.style.fontSize = "20px";
+    c.style.animation = "fall 3s linear forwards";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3000);
+  }
+}
+</script>
+
+</body>
+</html>
