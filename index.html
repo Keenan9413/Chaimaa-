@@ -17,7 +17,7 @@ body{
   overflow:hidden;
 }
 
-/* -------- ENVELOPPE -------- */
+/* ===== ÉCRAN DÉPART ===== */
 #start{
   text-align:center;
   background:rgba(255,255,255,.35);
@@ -35,7 +35,7 @@ body{
   50%{transform:translateY(-10px)}
 }
 
-/* -------- LETTRE -------- */
+/* ===== LETTRE ===== */
 #letter{
   display:none;
   background:white;
@@ -64,7 +64,7 @@ button{
   right:0;
 }
 
-/* -------- HACK -------- */
+/* ===== HACK ===== */
 #hack{
   display:none;
   position:fixed;
@@ -80,7 +80,7 @@ button{
   width:85%;
   max-width:420px;
   text-align:center;
-  box-shadow:0 0 20px red;
+  box-shadow:0 0 25px red;
 }
 .hackMain{
   font-size:28px;
@@ -106,7 +106,7 @@ button{
   transition:width .6s linear;
 }
 
-/* -------- FINAL -------- */
+/* ===== FINAL ===== */
 #final{
   display:none;
   position:fixed;
@@ -120,12 +120,12 @@ button{
   padding:30px;
   border-radius:20px;
   text-align:center;
-  box-shadow:0 0 30px hotpink;
+  box-shadow:0 0 35px hotpink;
 }
 .card h1{color:#e6005c}
 .card p{color:#ff1493;font-size:18px}
 
-/* -------- COEURS & CONFETTIS -------- */
+/* ===== EFFETS ===== */
 .heart,.confetti{
   position:absolute;
   animation:fall linear forwards;
@@ -139,20 +139,20 @@ button{
 
 <body>
 
-<!-- ENVELOPPE -->
+<!-- DÉPART -->
 <div id="start">
   <h2>Pour Chaimaa 💌</h2>
   <p>Clique sur l’enveloppe</p>
-  <img src="IMG_5431.jpeg" onclick="openLetter()">
+  <img src="IMG_5431.jpeg" id="env">
 </div>
 
 <!-- LETTRE -->
 <div id="letter">
   <h3>De Keenan ❤️</h3>
-  <p id="question">Veux-tu être ma future femme ?</p>
+  <p id="proposalText">Veux-tu être ma future femme ?</p>
   <div class="buttons">
-    <button id="yes" onclick="yesClick()">Oui ❤️</button>
-    <button id="no" onmouseover="moveNo()">Non 😔</button>
+    <button id="yes">Oui ❤️</button>
+    <button id="no">Non 😔</button>
   </div>
 </div>
 
@@ -178,8 +178,26 @@ button{
 </div>
 
 <script>
-let yesCount=0;
-const hackMessages=[
+/* ===== RÉFÉRENCES ===== */
+const start = document.getElementById("start");
+const letter = document.getElementById("letter");
+const hack = document.getElementById("hack");
+const final = document.getElementById("final");
+const hackMain = document.getElementById("hackMain");
+const bar = document.getElementById("bar");
+const yesBtn = document.getElementById("yes");
+const noBtn = document.getElementById("no");
+const env = document.getElementById("env");
+const proposalText = document.getElementById("proposalText");
+
+/* ===== MESSAGES ===== */
+const proposalMessages = [
+  "Veux-tu être ma future femme ?",
+  "T’es sûre ? 🤗",
+  "Re-réfléchis… 🫣"
+];
+
+const hackMessages = [
   "TRÈS BIEN",
   "JE VAIS TE HACKER",
   "MAINTENANT",
@@ -191,66 +209,61 @@ const hackMessages=[
   "ERREUR SYSTÈME"
 ];
 
-function openLetter(){
-  start.style.display="none";
-  letter.style.display="block";
-}
+let proposalStep = 0;
 
-function moveNo(){
-  no.style.transform=`translate(${Math.random()*120}px,${Math.random()*40}px)`;
-}
+/* ===== LOGIQUE ===== */
+env.onclick = () => {
+  start.style.display = "none";
+  letter.style.display = "block";
+};
 
-function yesClick(){
-  yesCount++;
-  if(yesCount>=3){
-    letter.style.display="none";
+noBtn.onmouseover = () => {
+  noBtn.style.transform =
+    `translate(${Math.random()*120}px,${Math.random()*40}px)`;
+};
+
+yesBtn.onclick = () => {
+  proposalStep++;
+  if (proposalStep < proposalMessages.length) {
+    proposalText.innerText = proposalMessages[proposalStep];
+  } else {
+    letter.style.display = "none";
     startHack();
   }
-}
+};
 
 function startHack(){
-  hack.style.display="flex";
-  let i=0;
-  const interval=setInterval(()=>{
-    hackMain.innerText=hackMessages[i];
-    bar.style.width=((i+1)/hackMessages.length*100)+"%";
+  hack.style.display = "flex";
+  let i = 0;
+  const interval = setInterval(()=>{
+    hackMain.innerText = hackMessages[i];
+    bar.style.width = ((i+1)/hackMessages.length*100)+"%";
     i++;
-    if(i===hackMessages.length){
+    if(i === hackMessages.length){
       clearInterval(interval);
       setTimeout(showFinal,800);
     }
-  },900);
+  }, 900);
 }
 
 function showFinal(){
-  hack.style.display="none";
-  final.style.display="flex";
+  hack.style.display = "none";
+  final.style.display = "flex";
   for(let i=0;i<40;i++){
-    createHeart();
-    createConfetti();
+    spawn("💖","heart");
+    spawn("🎉","confetti");
   }
 }
 
-function createHeart(){
-  const h=document.createElement("div");
-  h.className="heart";
-  h.innerText="💖";
-  h.style.left=Math.random()*100+"vw";
-  h.style.fontSize=20+Math.random()*20+"px";
-  h.style.animationDuration=3+Math.random()*2+"s";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),5000);
-}
-
-function createConfetti(){
-  const c=document.createElement("div");
-  c.className="confetti";
-  c.innerText="🎉";
-  c.style.left=Math.random()*100+"vw";
-  c.style.fontSize=14+Math.random()*16+"px";
-  c.style.animationDuration=3+Math.random()*2+"s";
-  document.body.appendChild(c);
-  setTimeout(()=>c.remove(),5000);
+function spawn(txt,cls){
+  const e=document.createElement("div");
+  e.className=cls;
+  e.innerText=txt;
+  e.style.left=Math.random()*100+"vw";
+  e.style.fontSize=14+Math.random()*20+"px";
+  e.style.animationDuration=3+Math.random()*2+"s";
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),5000);
 }
 </script>
 
