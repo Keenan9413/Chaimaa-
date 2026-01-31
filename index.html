@@ -25,7 +25,7 @@ body{
   border-radius:20px;
 }
 .envelope img{
-  width:100px;
+  width:120px;
   cursor:pointer;
   animation:bounce 1.5s infinite;
 }
@@ -42,16 +42,22 @@ body{
   border-radius:15px;
   text-align:center;
 }
+.buttons{
+  position:relative;
+  height:70px;
+}
 button{
-  padding:10px 25px;
+  padding:10px 20px;
   border-radius:20px;
   border:none;
   cursor:pointer;
   font-size:16px;
 }
-#yes{
-  background:#ff4081;
-  color:white;
+#yes{background:#ff4081;color:white;}
+#no{
+  background:#ddd;
+  position:absolute;
+  right:0;
 }
 
 /* HACK */
@@ -60,35 +66,45 @@ button{
   position:fixed;
   inset:0;
   background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
   color:red;
   font-family:monospace;
-  padding:20px;
 }
-.hack h1{font-size:32px}
-.log p{
-  margin:5px 0;
-  font-weight:bold;
+.hack-box{
+  border:2px solid red;
+  padding:25px;
+  min-width:260px;
+  text-align:center;
+  animation:flash .3s;
+}
+@keyframes flash{
+  from{opacity:0;transform:scale(.8)}
+  to{opacity:1;transform:scale(1)}
 }
 .progress-bar{
-  margin-top:30px;
-  width:100%;
-  height:14px;
+  margin-top:20px;
+  width:260px;
+  height:12px;
   background:#333;
-  border-radius:10px;
 }
 .progress{
   height:100%;
   width:0%;
   background:red;
-  border-radius:10px;
 }
 
-/* FIN (IMPORTANT : PAS de display:flex ici) */
+/* FINAL */
 .final{
   display:none;
   position:fixed;
   inset:0;
   background:rgba(0,0,0,.4);
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 .card{
   background:#ffe6ef;
@@ -98,11 +114,23 @@ button{
   text-align:center;
   animation:pop .8s ease forwards;
 }
-.card h1{font-size:40px;color:#ff2f6d}
-.card p{font-size:20px;color:#ff5f9e}
+.card h1{color:#ff2f6d;font-size:40px}
+.card p{color:#ff5f9e;font-size:20px}
+
 @keyframes pop{
   from{transform:scale(.5);opacity:0}
   to{transform:scale(1);opacity:1}
+}
+
+/* CONFETTI & COEURS */
+.fall{
+  position:fixed;
+  top:-20px;
+  font-size:22px;
+  animation:fall 3s linear forwards;
+}
+@keyframes fall{
+  to{transform:translateY(110vh);opacity:0}
 }
 </style>
 </head>
@@ -120,84 +148,83 @@ button{
 
 <!-- QUESTION -->
 <div class="letter" id="letter">
-  <p id="question">Veux-tu être ma future femme ?</p>
-  <button id="yes" onclick="yesClick()">Oui ❤️</button>
+  <p>Veux-tu être ma future femme ?</p>
+  <div class="buttons">
+    <button id="yes" onclick="startHack()">Oui ❤️</button>
+    <button id="no" onmouseover="moveNo()">Non 😔</button>
+  </div>
 </div>
 
 <!-- HACK -->
 <div class="hack" id="hack">
-  <h1 id="hackTitle">TRÈS BIEN</h1>
-  <p>TRÈS BIEN JE VAIS TE HACKER MAINTENANT, C’EST TANT PIS POUR TOI</p>
-  <div class="log" id="log"></div>
+  <div class="hack-box" id="hackBox">TRÈS BIEN</div>
   <div class="progress-bar"><div class="progress" id="progress"></div></div>
 </div>
 
-<!-- FIN -->
+<!-- FINAL -->
 <div class="final" id="final">
   <div class="card">
     <h1>Je t’aime ❤️</h1>
-    <p>Joyeuse Saint Chaimaa Beauté ! 💝</p>
+    <p>Joyeuse Saint Chaimaa Beauté !!</p>
   </div>
 </div>
 
 <script>
-let step=0;
-const questions=[
-  "Veux-tu être ma future femme ?",
-  "T’es sûre ?",
-  "Réfléchis bien 😏"
-];
-
 function openLetter(){
   start.style.display="none";
   letter.style.display="block";
 }
 
-function yesClick(){
-  step++;
-  if(step<questions.length){
-    question.innerText=questions[step];
-  }else{
-    letter.style.display="none";
-    startHack();
-  }
+function moveNo(){
+  no.style.transform=`translate(${Math.random()*120}px,${Math.random()*40}px)`;
 }
 
 function startHack(){
-  hack.style.display="block";
+  letter.style.display="none";
+  hack.style.display="flex";
 
   const messages=[
+    "TRÈS BIEN JE VAIS TE HACKER MAINTENANT",
     "JE VAIS TE HACKER",
     "MAINTENANT",
     "C’EST TANT PIS POUR TOI",
     "⚠️ HACK EN COURS ⚠️",
     "SYSTÈME COMPROMIS",
-    "TRÈS BIEN",
     "SYSTÈME HS",
     "ERREUR SYSTÈME"
   ];
 
-  let i=0,progress=0;
+  let i=0;
+  const step=100/messages.length;
 
   const interval=setInterval(()=>{
-    if(i<messages.length){
-      log.innerHTML=`<p>${messages[i]}</p>`+log.innerHTML;
-      i++;
-    }
-    progress+=3;
-    progress=Math.min(progress,100);
-    document.getElementById("progress").style.width=progress+"%";
+    hackBox.innerText=messages[i];
+    hackBox.style.animation="none";
+    hackBox.offsetHeight;
+    hackBox.style.animation="flash .3s";
 
-    if(progress>=100){
+    progress.style.width=((i+1)*step)+"%";
+    i++;
+
+    if(i>=messages.length){
       clearInterval(interval);
-      setTimeout(()=>{
-        hack.style.display="none";
-        final.style.display="flex";
-        final.style.justifyContent="center";
-        final.style.alignItems="center";
-      },700);
+      setTimeout(showFinal,700);
     }
   },700);
+}
+
+function showFinal(){
+  hack.style.display="none";
+  final.style.display="flex";
+
+  for(let i=0;i<40;i++){
+    const e=document.createElement("div");
+    e.className="fall";
+    e.innerText=Math.random()>.5?"🎉":"💖";
+    e.style.left=Math.random()*100+"vw";
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),3000);
+  }
 }
 </script>
 
