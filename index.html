@@ -6,6 +6,7 @@
 <title>Pour Chaimaa ❤️</title>
 
 <style>
+/* ===== FOND ROMANTIQUE ===== */
 body{
   margin:0;
   height:100vh;
@@ -66,7 +67,16 @@ button{
   background:black;
   color:red;
   border:4px solid red;
+  animation:shake .12s infinite;
 }
+@keyframes shake{
+  0%{transform:translate(0,0)}
+  25%{transform:translate(3px,-3px)}
+  50%{transform:translate(-3px,3px)}
+  75%{transform:translate(3px,3px)}
+  100%{transform:translate(0,0)}
+}
+
 .progress{
   width:100%;
   height:14px;
@@ -79,7 +89,18 @@ button{
   height:100%;
   width:0%;
   background:red;
-  transition:width .7s linear;
+  transition:width .6s linear;
+}
+
+.hackText{
+  font-weight:bold;
+  margin-top:12px;
+  animation:blink .4s infinite;
+}
+@keyframes blink{
+  0%{opacity:1}
+  50%{opacity:.3}
+  100%{opacity:1}
 }
 
 /* ===== ENVELOPPE FINALE ===== */
@@ -95,7 +116,7 @@ button{
 }
 @keyframes pulse{
   0%,100%{transform:scale(1)}
-  50%{transform:scale(1.04)}
+  50%{transform:scale(1.05)}
 }
 
 .flap{
@@ -139,7 +160,7 @@ button{
   transition:opacity 1s ease;
 }
 
-/* ===== CŒURS ===== */
+/* ===== CŒURS FOND ===== */
 .bgHeart{
   position:absolute;
   opacity:.25;
@@ -171,13 +192,12 @@ button{
 
 <!-- HACK -->
 <div class="card" id="hack">
-  <h2 id="hackTop">HACK EN COURS</h2>
+  <h2 class="hackText" id="hackTop">INITIALISATION…</h2>
   <div class="progress"><div class="bar" id="bar"></div></div>
 </div>
 
-<!-- ENVELOPPE FINALE (FORCÉE CACHÉE) -->
+<!-- ENVELOPPE FINALE (SANS TEXTE) -->
 <div class="card" id="finalEnvelope" style="display:none">
-  <p>Clique pour ouvrir 💌</p>
   <div class="envelopeBox" id="envBox" onclick="openFinalLetter()">
     <div class="flap"></div>
     <div class="letter">
@@ -193,9 +213,17 @@ const questions=[
   "Réfléchis bien… 😘",
   "T’es sûre ? 🤍"
 ];
-const hackMsgs=["INITIALISATION","HACK EN COURS","ACCÈS TOTAL","TERMINÉ"];
-let q=0,h=0;
 
+const hackMsgs=[
+  "ACCÈS AU SYSTÈME…",
+  "CONNEXION ÉTABLIE",
+  "EXTRACTION DES DONNÉES",
+  "ACCÈS TOTAL",
+  "SYSTÈME COMPROMIS",
+  "HACK TERMINÉ"
+];
+
+let q=0,h=0;
 setInterval(spawnBgHeart,600);
 
 function openLetter(){
@@ -233,24 +261,20 @@ function openFinalLetter(){
   const box=document.getElementById("envBox");
   const sub=document.getElementById("finalSub");
   if(box.classList.contains("open")) return;
-
   box.classList.add("open");
   sub.style.opacity=0;
-
-  typeWriter("Je t’aime ❤️","typeText",120,()=>{
-    sub.style.opacity=1;
-  });
+  typeWriter("Je t’aime ❤️","typeText",120,()=>sub.style.opacity=1);
 }
 
-function typeWriter(text,id,speed,callback){
+function typeWriter(text,id,speed,cb){
   let i=0;
   const el=document.getElementById(id);
   el.innerHTML="";
-  const interval=setInterval(()=>{
+  const t=setInterval(()=>{
     el.innerHTML+=text.charAt(i++);
     if(i>=text.length){
-      clearInterval(interval);
-      if(callback) callback();
+      clearInterval(t);
+      if(cb) cb();
     }
   },speed);
 }
