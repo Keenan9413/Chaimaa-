@@ -9,7 +9,7 @@
 body {
   margin: 0;
   height: 100vh;
-  background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+  background: linear-gradient(135deg,#ffb6c1,#ff69b4);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,8 +32,8 @@ body {
 }
 
 @keyframes bounce {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
 }
 
 /* QUESTION */
@@ -50,90 +50,89 @@ button {
   border-radius: 20px;
   border: none;
   cursor: pointer;
-  background: #ff4081;
-  color: white;
   font-size: 16px;
+}
+
+#yes {
+  background:#ff4081;
+  color:white;
 }
 
 /* HACK */
 .hack {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: black;
-  color: red;
-  font-family: monospace;
-  padding: 20px;
+  display:none;
+  position:fixed;
+  inset:0;
+  background:black;
+  color:red;
+  font-family:monospace;
+  padding:20px;
 }
 
 .hack h1 {
-  font-size: 32px;
-  color: red;
-}
-
-.hack p {
-  font-weight: bold;
+  font-size:32px;
 }
 
 .log p {
-  margin: 5px 0;
+  margin:5px 0;
+  font-weight:bold;
 }
 
 .progress-bar {
-  margin-top: 30px;
-  width: 100%;
-  height: 14px;
-  background: #333;
-  border-radius: 10px;
+  margin-top:30px;
+  width:100%;
+  height:14px;
+  background:#333;
+  border-radius:10px;
 }
 
 .progress {
-  height: 100%;
-  width: 0%;
-  background: red;
-  border-radius: 10px;
+  height:100%;
+  width:0%;
+  background:red;
+  border-radius:10px;
 }
 
-/* CARTE FINALE */
+/* FIN */
 .final {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.4);
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
 .card {
-  background: #ffe6ef;
-  border: 4px solid #ff69b4;
-  border-radius: 25px;
-  padding: 30px 40px;
-  text-align: center;
-  animation: pop 0.8s ease forwards;
+  background:#ffe6ef;
+  border:4px solid #ff69b4;
+  border-radius:25px;
+  padding:30px 40px;
+  text-align:center;
+  animation:pop .8s ease forwards;
 }
 
 .card h1 {
-  font-size: 40px;
-  color: #ff2f6d;
+  font-size:40px;
+  color:#ff2f6d;
 }
 
 .card p {
-  font-size: 20px;
-  color: #ff5f9e;
-  margin-top: 10px;
+  font-size:20px;
+  color:#ff5f9e;
 }
 
 @keyframes pop {
-  from { transform: scale(0.5); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from{transform:scale(.5);opacity:0}
+  to{transform:scale(1);opacity:1}
 }
 </style>
 </head>
 
 <body>
 
+<!-- ACCUEIL -->
 <div class="container" id="start">
   <h1>Pour Chaimaa 💌</h1>
   <p>Clique sur l’enveloppe</p>
@@ -142,40 +141,55 @@ button {
   </div>
 </div>
 
+<!-- QUESTION -->
 <div class="letter" id="letter">
-  <p>Veux-tu être ma future femme ?</p>
-  <button onclick="startHack()">Oui ❤️</button>
+  <p id="question">Veux-tu être ma future femme ?</p>
+  <button id="yes" onclick="yesClick()">Oui ❤️</button>
 </div>
 
+<!-- HACK -->
 <div class="hack" id="hack">
   <h1 id="hackTitle">TRÈS BIEN</h1>
   <p>TRÈS BIEN JE VAIS TE HACKER MAINTENANT, C’EST TANT PIS POUR TOI</p>
-
   <div class="log" id="log"></div>
-
-  <div class="progress-bar">
-    <div class="progress" id="progress"></div>
-  </div>
+  <div class="progress-bar"><div class="progress" id="progress"></div></div>
 </div>
 
+<!-- FIN -->
 <div class="final" id="final">
   <div class="card">
     <h1>Je t’aime ❤️</h1>
-    <p>Tu as fait mon bonheur ! 💝</p>
+    <p>Joyeuse Saint Chaimaa Beauté ! 💝</p>
   </div>
 </div>
 
 <script>
-function openLetter() {
-  start.style.display = "none";
-  letter.style.display = "block";
+let step = 0;
+const questions = [
+  "Veux-tu être ma future femme ?",
+  "T’es sûre ?",
+  "Réfléchis bien 😏"
+];
+
+function openLetter(){
+  start.style.display="none";
+  letter.style.display="block";
 }
 
-function startHack() {
-  letter.style.display = "none";
-  hack.style.display = "block";
+function yesClick(){
+  step++;
+  if(step < questions.length){
+    question.innerText = questions[step];
+  } else {
+    letter.style.display="none";
+    startHack();
+  }
+}
 
-  const messages = [
+function startHack(){
+  hack.style.display="block";
+
+  const messages=[
     "JE VAIS TE HACKER",
     "MAINTENANT",
     "C’EST TANT PIS POUR TOI",
@@ -186,29 +200,29 @@ function startHack() {
     "ERREUR SYSTÈME"
   ];
 
-  let i = 0;
-  let progress = 0;
+  let i=0, progress=0;
 
-  const interval = setInterval(() => {
-    if (i < messages.length) {
-      log.innerHTML = `<p><strong>${messages[i]}</strong></p>` + log.innerHTML;
+  const interval=setInterval(()=>{
+    if(i<messages.length){
+      log.innerHTML=`<p>${messages[i]}</p>`+log.innerHTML;
       i++;
     }
+    progress+=3;
+    progress=Math.min(progress,100);
+    progressBar=document.getElementById("progress");
+    progressBar.style.width=progress+"%";
 
-    progress += 3;
-    progress = Math.min(progress, 100);
-    document.getElementById("progress").style.width = progress + "%";
-
-    if (progress >= 100) {
+    if(progress>=100){
       clearInterval(interval);
-      setTimeout(() => {
-        hack.style.display = "none";
-        final.style.display = "flex";
-      }, 700);
+      setTimeout(()=>{
+        hack.style.display="none";
+        final.style.display="flex";
+      },700);
     }
-  }, 700);
+  },700);
 }
 </script>
 
 </body>
 </html>
+
