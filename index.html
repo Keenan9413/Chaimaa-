@@ -6,60 +6,56 @@
 <title>Pour Chaimaa ❤️</title>
 
 <style>
-body {
-  margin: 0;
-  height: 100vh;
-  background: linear-gradient(135deg,#ffb6c1,#ff69b4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: Arial, sans-serif;
-  overflow: hidden;
+body{
+  margin:0;
+  height:100vh;
+  background:linear-gradient(135deg,#ffb6c1,#ff69b4);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Arial,sans-serif;
+  overflow:hidden;
 }
 
 /* ACCUEIL */
-.container {
-  text-align: center;
-  background: rgba(255,255,255,0.4);
-  padding: 30px;
-  border-radius: 20px;
+.container{
+  text-align:center;
+  background:rgba(255,255,255,.4);
+  padding:30px;
+  border-radius:20px;
 }
-
-.envelope img {
-  width: 100px;
-  cursor: pointer;
-  animation: bounce 1.5s infinite;
+.envelope img{
+  width:100px;
+  cursor:pointer;
+  animation:bounce 1.5s infinite;
 }
-
-@keyframes bounce {
+@keyframes bounce{
   0%,100%{transform:translateY(0)}
   50%{transform:translateY(-10px)}
 }
 
 /* QUESTION */
-.letter {
-  display: none;
-  background: white;
-  padding: 25px;
-  border-radius: 15px;
-  text-align: center;
+.letter{
+  display:none;
+  background:white;
+  padding:25px;
+  border-radius:15px;
+  text-align:center;
 }
-
-button {
-  padding: 10px 25px;
-  border-radius: 20px;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
+button{
+  padding:10px 25px;
+  border-radius:20px;
+  border:none;
+  cursor:pointer;
+  font-size:16px;
 }
-
-#yes {
+#yes{
   background:#ff4081;
   color:white;
 }
 
 /* HACK */
-.hack {
+.hack{
   display:none;
   position:fixed;
   inset:0;
@@ -68,43 +64,33 @@ button {
   font-family:monospace;
   padding:20px;
 }
-
-.hack h1 {
-  font-size:32px;
-}
-
-.log p {
+.hack h1{font-size:32px}
+.log p{
   margin:5px 0;
   font-weight:bold;
 }
-
-.progress-bar {
+.progress-bar{
   margin-top:30px;
   width:100%;
   height:14px;
   background:#333;
   border-radius:10px;
 }
-
-.progress {
+.progress{
   height:100%;
   width:0%;
   background:red;
   border-radius:10px;
 }
 
-/* FIN */
-.final {
+/* FIN (IMPORTANT : PAS de display:flex ici) */
+.final{
   display:none;
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.4);
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  background:rgba(0,0,0,.4);
 }
-
-.card {
+.card{
   background:#ffe6ef;
   border:4px solid #ff69b4;
   border-radius:25px;
@@ -112,18 +98,9 @@ button {
   text-align:center;
   animation:pop .8s ease forwards;
 }
-
-.card h1 {
-  font-size:40px;
-  color:#ff2f6d;
-}
-
-.card p {
-  font-size:20px;
-  color:#ff5f9e;
-}
-
-@keyframes pop {
+.card h1{font-size:40px;color:#ff2f6d}
+.card p{font-size:20px;color:#ff5f9e}
+@keyframes pop{
   from{transform:scale(.5);opacity:0}
   to{transform:scale(1);opacity:1}
 }
@@ -159,13 +136,13 @@ button {
 <div class="final" id="final">
   <div class="card">
     <h1>Je t’aime ❤️</h1>
-    <p>Joyeuse Saint Chaimaa Beauté ! 💝</p>
+    <p>Joyeuseu Saint Chaimaa Beauté ! 💝</p>
   </div>
 </div>
 
 <script>
-let step = 0;
-const questions = [
+let step=0;
+const questions=[
   "Veux-tu être ma future femme ?",
   "T’es sûre ?",
   "Réfléchis bien 😏"
@@ -178,9 +155,9 @@ function openLetter(){
 
 function yesClick(){
   step++;
-  if(step < questions.length){
-    question.innerText = questions[step];
-  } else {
+  if(step<questions.length){
+    question.innerText=questions[step];
+  }else{
     letter.style.display="none";
     startHack();
   }
@@ -200,7 +177,7 @@ function startHack(){
     "ERREUR SYSTÈME"
   ];
 
-  let i=0, progress=0;
+  let i=0,progress=0;
 
   const interval=setInterval(()=>{
     if(i<messages.length){
@@ -209,14 +186,15 @@ function startHack(){
     }
     progress+=3;
     progress=Math.min(progress,100);
-    progressBar=document.getElementById("progress");
-    progressBar.style.width=progress+"%";
+    document.getElementById("progress").style.width=progress+"%";
 
     if(progress>=100){
       clearInterval(interval);
       setTimeout(()=>{
         hack.style.display="none";
         final.style.display="flex";
+        final.style.justifyContent="center";
+        final.style.alignItems="center";
       },700);
     }
   },700);
@@ -225,4 +203,3 @@ function startHack(){
 
 </body>
 </html>
-
