@@ -275,7 +275,7 @@ function spawnConfetti(){
   c.style.left=Math.random()*100+"vw";
   c.style.top=Math.random()*100+"vh";
   c.style.fontSize=14+Math.random()*20+"px";
-  document.body.appendChild(c);
+  final.appendChild(c);
   confettis.push(c);
   setTimeout(()=>{c.remove();confettis=confettis.filter(e=>e!==c)},6000);
 }
