@@ -6,20 +6,19 @@
 <title>Pour Chaimaa ❤️</title>
 
 <style>
-/* ===== FOND ROMANTIQUE ANIMÉ ===== */
+/* ===== FOND ROMANTIQUE ===== */
 body{
   margin:0;
   height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
-  background:linear-gradient(270deg,#ff9acb,#ff5fa2,#ff9acb);
+  background:linear-gradient(270deg,#ff9acb,#ff5fa2,#ffb3d9);
   background-size:600% 600%;
-  animation:bgMove 12s ease infinite;
+  animation:bgMove 14s ease infinite;
   font-family:Arial,sans-serif;
   overflow:hidden;
 }
-
 @keyframes bgMove{
   0%{background-position:0% 50%}
   50%{background-position:100% 50%}
@@ -63,12 +62,28 @@ button{
   50%{transform:translateY(-10px);}
 }
 
-/* ===== HACK ===== */
+/* ===== HACK (RENFORCÉ) ===== */
 #hack{
   background:black;
   color:red;
   border:4px solid red;
+  animation:blink .15s infinite alternate;
 }
+@keyframes blink{
+  from{transform:scale(1)}
+  to{transform:scale(1.05)}
+}
+.hackBox{
+  animation:shake .12s infinite;
+}
+@keyframes shake{
+  0%{transform:translate(0,0)}
+  25%{transform:translate(4px,-4px)}
+  50%{transform:translate(-4px,4px)}
+  75%{transform:translate(4px,4px)}
+  100%{transform:translate(0,0)}
+}
+
 .progress{
   width:100%;
   height:14px;
@@ -84,13 +99,30 @@ button{
   transition:width .7s linear;
 }
 
-/* ===== ENVELOPPE FINALE ===== */
+/* ===== ROSES ===== */
+.rose{
+  position:fixed;
+  top:-10vh;
+  animation:roseFall 5s linear forwards;
+  z-index:5;
+}
+@keyframes roseFall{
+  to{transform:translateY(120vh) rotate(360deg);opacity:0}
+}
+
+/* ===== FINAL CENTRÉ ===== */
 #finalEnvelope{
   display:none;
   background:none;
   box-shadow:none;
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
+/* ===== ENVELOPPE ===== */
 .envelopeBox{
   width:260px;
   height:170px;
@@ -101,7 +133,6 @@ button{
   cursor:pointer;
   animation:pulse 1.6s infinite;
 }
-
 @keyframes pulse{
   0%,100%{transform:scale(1)}
   50%{transform:scale(1.04)}
@@ -118,7 +149,6 @@ button{
   transform-origin:top;
   transition:transform 1s ease;
 }
-
 .envelopeBox.open .flap{
   transform:rotateX(180deg);
 }
@@ -133,7 +163,6 @@ button{
   padding-top:35px;
   transition:bottom 1s ease;
 }
-
 .envelopeBox.open .letter{
   bottom:0;
 }
@@ -143,28 +172,29 @@ button{
   font-size:30px;
   min-height:40px;
 }
-
 .letter p{
   color:#ff4081;
   font-size:18px;
   opacity:0;
   transition:opacity 1s ease;
 }
-
 .envelopeBox.open .letter p{
   opacity:1;
 }
 
-/* ===== CŒURS FOND ===== */
-.bgHeart{
+/* ===== VAGUE ===== */
+.wave{
   position:absolute;
-  opacity:.25;
-  animation:floatHeart 8s linear forwards;
+  bottom:-15px;
+  left:-50%;
+  width:200%;
+  height:60px;
+  background:rgba(255,64,129,.35);
+  border-radius:100%;
+  animation:waveMove 4s linear infinite;
 }
-@keyframes floatHeart{
-  from{transform:translateY(100vh) scale(.6);opacity:0}
-  20%{opacity:.4}
-  to{transform:translateY(-20vh) scale(1);opacity:0}
+@keyframes waveMove{
+  to{transform:translateX(-50%)}
 }
 </style>
 </head>
@@ -187,18 +217,20 @@ button{
 
 <!-- HACK -->
 <div class="card" id="hack">
-  <h2 id="hackTop">HACK EN COURS</h2>
-  <div class="progress"><div class="bar" id="bar"></div></div>
+  <div class="hackBox">
+    <h2 id="hackTop">HACK EN COURS</h2>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+  </div>
 </div>
 
-<!-- ENVELOPPE FINALE -->
+<!-- FINAL -->
 <div class="card" id="finalEnvelope">
-  <p>Clique pour ouvrir 💌</p>
   <div class="envelopeBox" id="envBox" onclick="openFinalLetter()">
     <div class="flap"></div>
     <div class="letter">
       <h1 id="typeText"></h1>
-      <p id="finalSub">Joyeuse Saint Chaimaa Beauté 💖</p>
+      <p>Joyeuse Saint Chaimaa Beauté 💖</p>
+      <div class="wave"></div>
     </div>
   </div>
 </div>
@@ -209,13 +241,12 @@ const questions=[
   "Réfléchis bien… 😘",
   "T’es sûre ? 🤍"
 ];
-const hackMsgs=["INITIALISATION","HACK EN COURS","ACCÈS TOTAL","TERMINÉ"];
-let q=0,h=0;
+const hackMsgs=["INITIALISATION","INTRUSION","SYSTÈME COMPROMIS","TERMINÉ"];
+let q=0,h=0, vib;
 
-window.onload=()=>{
-  intro.style.display="block";
-  setInterval(spawnBgHeart,500);
-}
+window.onload=()=>intro.style.display="block";
+
+function vibrate(p){navigator.vibrate && navigator.vibrate(p);}
 
 function openLetter(){
   intro.style.display="none";
@@ -223,6 +254,8 @@ function openLetter(){
 }
 
 function nextQuestion(){
+  vibrate(120);
+  rainRoses();
   q++;
   if(q<questions.length){
     qText.innerText=questions[q];
@@ -232,51 +265,54 @@ function nextQuestion(){
   }
 }
 
+/* 🌹 PLUIE DE ROSES */
+function rainRoses(){
+  for(let i=0;i<25;i++){
+    const r=document.createElement("div");
+    r.className="rose";
+    r.innerHTML="🌹";
+    r.style.left=Math.random()*100+"vw";
+    r.style.fontSize=22+Math.random()*18+"px";
+    document.body.appendChild(r);
+    setTimeout(()=>r.remove(),5000);
+  }
+}
+
+/* 💻 HACK */
 function startHack(){
   hack.style.display="block";
+  vib=setInterval(()=>vibrate([200,100]),300);
   const i=setInterval(()=>{
     hackTop.innerText=hackMsgs[h];
     bar.style.width=((h+1)/hackMsgs.length)*100+"%";
     h++;
     if(h>=hackMsgs.length){
       clearInterval(i);
+      clearInterval(vib);
       setTimeout(()=>{
         hack.style.display="none";
-        finalEnvelope.style.display="block";
+        finalEnvelope.style.display="flex";
       },800);
     }
   },900);
 }
 
-/* ===== OUVERTURE ENVELOPPE + TEXTE ===== */
+/* 💌 FINAL */
 function openFinalLetter(){
   const box=document.getElementById("envBox");
-  if(box.classList.contains("open")) return;
+  if(box.classList.contains("open"))return;
   box.classList.add("open");
-  typeWriter("Je t’aime ❤️", "typeText", 120);
+  typeWriter("Je t’aime ❤️","typeText",120);
 }
 
-/* ===== EFFET MACHINE À ÉCRIRE ===== */
 function typeWriter(text,id,speed){
   let i=0;
   const el=document.getElementById(id);
   el.innerHTML="";
-  const interval=setInterval(()=>{
-    el.innerHTML+=text.charAt(i);
-    i++;
-    if(i>=text.length) clearInterval(interval);
+  const t=setInterval(()=>{
+    el.innerHTML+=text.charAt(i++);
+    if(i>=text.length)clearInterval(t);
   },speed);
-}
-
-/* ===== CŒURS FOND ===== */
-function spawnBgHeart(){
-  const h=document.createElement("div");
-  h.className="bgHeart";
-  h.innerHTML="❤️";
-  h.style.left=Math.random()*100+"vw";
-  h.style.fontSize=16+Math.random()*30+"px";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),8000);
 }
 
 function moveNo(){
