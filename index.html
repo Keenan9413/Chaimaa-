@@ -26,11 +26,12 @@ body {
   box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-
+/* 🔽 ENVELOPPE EN IMAGE */
 .envelope {
-  font-size: 80px;
+  width: 240px;
   cursor: pointer;
   animation: bounce 1.5s infinite;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
 }
 
 @keyframes bounce {
@@ -47,9 +48,7 @@ body {
   width: 90%;
   max-width: 350px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  transform: scaleY(0);
   transform-origin: top;
-  animation: unfold 0.8s forwards;
 }
 
 @keyframes unfold {
@@ -126,7 +125,8 @@ button {
 <div class="container" id="start">
   <h1>Pour Chaimaa Amirat 💌</h1>
   <p>Clique sur l’enveloppe</p>
-  <div class="envelope" onclick="openLetter()">✉️</div>
+
+  <img src="IMG_5431.jpeg" class="envelope" onclick="openLetter()" alt="Enveloppe">
 </div>
 
 <div class="letter" id="letter">
@@ -157,7 +157,9 @@ function vibrate() {
 
 function openLetter() {
   document.getElementById("start").style.display = "none";
-  document.getElementById("letter").style.display = "block";
+  const letter = document.getElementById("letter");
+  letter.style.display = "block";
+  letter.style.animation = "unfold 0.8s forwards";
   setInterval(createHeart, 500);
 }
 
