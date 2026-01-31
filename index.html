@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💖 Pour Chaimaa</title>
+<title>Pour Chaimaa ❤️</title>
 
 <style>
 body {
@@ -20,11 +20,9 @@ body {
 /* ACCUEIL */
 .container {
   text-align: center;
-  color: #b0004f;
-  background: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.4);
   padding: 30px;
   border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
 .envelope img {
@@ -38,33 +36,27 @@ body {
   50% { transform: translateY(-10px); }
 }
 
-/* LETTRE */
+/* QUESTION */
 .letter {
   display: none;
   background: white;
   padding: 25px;
   border-radius: 15px;
-  max-width: 350px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.main-text {
-  font-size: 20px;
-  margin: 20px 0;
+  text-align: center;
 }
 
 button {
-  padding: 10px 20px;
+  padding: 10px 25px;
   border-radius: 20px;
   border: none;
   cursor: pointer;
+  background: #ff4081;
+  color: white;
+  font-size: 16px;
 }
 
-#yes { background: #ff4081; color: white; }
-#no { background: #ddd; position: absolute; right: 0; }
-
 /* HACK */
-.hack-screen {
+.hack {
   display: none;
   position: fixed;
   inset: 0;
@@ -74,25 +66,68 @@ button {
   padding: 20px;
 }
 
+.hack h1 {
+  font-size: 32px;
+  color: red;
+}
+
+.hack p {
+  font-weight: bold;
+}
+
+.log p {
+  margin: 5px 0;
+}
+
 .progress-bar {
+  margin-top: 30px;
   width: 100%;
-  height: 12px;
+  height: 14px;
   background: #333;
+  border-radius: 10px;
 }
 
 .progress {
   height: 100%;
   width: 0%;
   background: red;
+  border-radius: 10px;
 }
 
-/* FINAL */
+/* CARTE FINALE */
 .final {
   display: none;
-  background: white;
-  padding: 30px;
-  border-radius: 20px;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  background: #ffe6ef;
+  border: 4px solid #ff69b4;
+  border-radius: 25px;
+  padding: 30px 40px;
   text-align: center;
+  animation: pop 0.8s ease forwards;
+}
+
+.card h1 {
+  font-size: 40px;
+  color: #ff2f6d;
+}
+
+.card p {
+  font-size: 20px;
+  color: #ff5f9e;
+  margin-top: 10px;
+}
+
+@keyframes pop {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 </style>
 </head>
@@ -108,74 +143,72 @@ button {
 </div>
 
 <div class="letter" id="letter">
-  <div class="main-text" id="message">Veux-tu être ma future femme ?</div>
-  <button id="yes" onclick="yesClick()">Oui ❤️</button>
-  <button id="no">Non 😔</button>
+  <p>Veux-tu être ma future femme ?</p>
+  <button onclick="startHack()">Oui ❤️</button>
 </div>
 
-<div class="hack-screen" id="hack">
-  <h1>TRÈS BIEN</h1>
-  <div id="hackMessages"></div>
+<div class="hack" id="hack">
+  <h1 id="hackTitle">TRÈS BIEN</h1>
+  <p>TRÈS BIEN JE VAIS TE HACKER MAINTENANT, C’EST TANT PIS POUR TOI</p>
+
+  <div class="log" id="log"></div>
+
   <div class="progress-bar">
     <div class="progress" id="progress"></div>
   </div>
 </div>
 
 <div class="final" id="final">
-  <h1>Je t’aime ❤️</h1>
-  <p>Tu as fait mon bonheur</p>
+  <div class="card">
+    <h1>Je t’aime ❤️</h1>
+    <p>Tu as fait mon bonheur ! 💝</p>
+  </div>
 </div>
 
 <script>
-let step = 0;
-const messages = [
-  "Veux-tu être ma future femme ?",
-  "T’es sûre 😏",
-  "Dernière chance…"
-];
-
-const hackLines = [
-  "Connexion en cours...",
-  "Accès autorisé...",
-  "Téléchargement du cœur ❤️",
-  "Amour piraté avec succès"
-];
-
 function openLetter() {
   start.style.display = "none";
   letter.style.display = "block";
 }
 
-function yesClick() {
-  step++;
-  if (step < messages.length) {
-    message.innerText = messages[step];
-  } else {
-    letter.style.display = "none";
-    startHack();
-  }
-}
-
 function startHack() {
+  letter.style.display = "none";
   hack.style.display = "block";
+
+  const messages = [
+    "JE VAIS TE HACKER",
+    "MAINTENANT",
+    "C’EST TANT PIS POUR TOI",
+    "⚠️ HACK EN COURS ⚠️",
+    "SYSTÈME COMPROMIS",
+    "TRÈS BIEN",
+    "SYSTÈME HS",
+    "ERREUR SYSTÈME"
+  ];
+
   let i = 0;
-  let p = 0;
+  let progress = 0;
+
   const interval = setInterval(() => {
-    hackMessages.innerHTML += hackLines[i] + "<br>";
-    p += 25;
-    progress.style.width = p + "%";
-    i++;
-    if (i >= hackLines.length) {
+    if (i < messages.length) {
+      log.innerHTML = `<p><strong>${messages[i]}</strong></p>` + log.innerHTML;
+      i++;
+    }
+
+    progress += 3;
+    progress = Math.min(progress, 100);
+    document.getElementById("progress").style.width = progress + "%";
+
+    if (progress >= 100) {
       clearInterval(interval);
       setTimeout(() => {
         hack.style.display = "none";
-        final.style.display = "block";
-      }, 800);
+        final.style.display = "flex";
+      }, 700);
     }
-  }, 500);
+  }, 700);
 }
 </script>
 
 </body>
 </html>
-
