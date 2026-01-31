@@ -117,6 +117,17 @@ button{
   transition:width .7s linear;
 }
 
+/* ===== TEXTE PROGRESSION HACK ===== */
+.hackProgressText{
+  display:none;
+  margin-top:10px;
+  font-size:13px;
+  font-weight:bold;
+  color:red;
+  letter-spacing:1px;
+  animation:flash .6s infinite;
+}
+
 /* ===== FINAL ===== */
 #final h1{color:#ff4081;font-size:32px}
 #final p{color:#ff4081;font-size:18px}
@@ -172,8 +183,13 @@ button{
       TRÈS BIEN JE VAIS TE HACKER MAINTENANT<br>
       C’EST TANT PIS POUR TOI ⚠️
     </div>
+
     <div class="progress">
       <div class="bar" id="bar"></div>
+    </div>
+
+    <div class="hackProgressText" id="hackProgressText">
+      HACK PROGRESS: LOADING...
     </div>
   </div>
 </div>
@@ -181,14 +197,14 @@ button{
 <!-- FINAL -->
 <div class="card" id="final">
   <h1>Je t’aime ❤️</h1>
-  <p> Joyeuse Saint Chaimaa Beauté 💖</p>
+  <p>Joyeuse Saint Chaimaa Beauté 💖</p>
 </div>
 
 <script>
 const questions=[
   "Veux-tu être ma future femme ? 💍",
   "Réfléchis bien… 😘",
-  "T’es sûre ? 🤍",
+  "T’es sûre ? 🤍"
 ];
 
 const hackMsgs=[
@@ -223,6 +239,10 @@ function nextQuestion(){
 
 function startHack(){
   hack.style.display="block";
+
+  // 🔥 AFFICHAGE FORCÉ DU TEXTE
+  document.getElementById("hackProgressText").style.display="block";
+
   spawnAlerts();
   const interval=setInterval(()=>{
     hackTop.innerText=hackMsgs[hStep];
@@ -268,29 +288,24 @@ function spawnHeart(){
 }
 
 function spawnConfetti(){
-  if(confettis.length >= 50){
+  if(confettis.length>=50){
     confettis.shift().remove();
   }
-
-  const c = document.createElement("div");
-  c.className = "confetti";
-  c.innerHTML = "🎉";
-
-  c.style.position = "fixed";   // clé absolue
-  c.style.left = Math.random()*100 + "vw";
-  c.style.top  = Math.random()*100 + "vh";
-  c.style.fontSize = 14 + Math.random()*22 + "px";
-  c.style.zIndex = "2";         // derrière la carte
-
+  const c=document.createElement("div");
+  c.className="confetti";
+  c.innerHTML="🎉";
+  c.style.position="fixed";
+  c.style.left=Math.random()*100+"vw";
+  c.style.top=Math.random()*100+"vh";
+  c.style.fontSize=14+Math.random()*22+"px";
+  c.style.zIndex="2";
   document.body.appendChild(c);
   confettis.push(c);
-
   setTimeout(()=>{
     c.remove();
-    confettis = confettis.filter(e=>e!==c);
+    confettis=confettis.filter(e=>e!==c);
   },6000);
 }
-
 
 function moveNo(){
   no.style.transform=`translate(${Math.random()*140-70}px,${Math.random()*80-40}px)`;
