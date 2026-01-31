@@ -85,11 +85,8 @@ button{
 
 /* ===== ENVELOPPE FINALE ===== */
 #finalEnvelope{
-  display:none;
   background:none;
   box-shadow:none;
-  display:flex;
-  flex-direction:column;
   justify-content:center;
   align-items:center;
 }
@@ -246,7 +243,6 @@ function startHack(){
 function openFinalLetter(){
   const box=document.getElementById("envBox");
   const sub=document.getElementById("finalSub");
-
   if(box.classList.contains("open")) return;
 
   box.classList.add("open");
