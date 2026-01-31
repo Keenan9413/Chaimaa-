@@ -12,18 +12,12 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
-  background:linear-gradient(270deg,#ff9acb,#ff5fa2,#ff9acb);
-  background-size:600% 600%;
-  animation:bgMove 12s ease infinite;
+  background:linear-gradient(135deg,#ff9acb,#ff5fa2);
   font-family:Arial,sans-serif;
   overflow:hidden;
 }
-@keyframes bgMove{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
 
+/* ===== CARTES ===== */
 .card{
   display:none;
   background:#ffd6e8;
@@ -37,18 +31,7 @@ body{
   z-index:10;
 }
 
-/* INTRO */
-.envelopeIntro{
-  width:200px;
-  cursor:pointer;
-  animation:bounce 1.4s infinite;
-}
-@keyframes bounce{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-10px)}
-}
-
-/* BOUTONS */
+/* ===== BOUTONS ===== */
 button{
   padding:12px 22px;
   border:none;
@@ -60,31 +43,36 @@ button{
 #yes{background:#ff4081;color:white;}
 #no{background:#ccc;position:absolute}
 
-/* ===== HACK ORIGINAL ===== */
+/* ===== ENVELOPPE INTRO ===== */
+.envelopeIntro{
+  width:200px;
+  cursor:pointer;
+  animation:bounce 1.4s infinite;
+}
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-10px);}
+}
+
+/* ===== HACK ===== */
 #hack{
   background:black;
   color:red;
   border:4px solid red;
-  animation:shake .12s infinite;
-}
-@keyframes shake{
-  0%{transform:translate(0,0)}
-  25%{transform:translate(4px,-4px)}
-  50%{transform:translate(-4px,4px)}
-  75%{transform:translate(4px,4px)}
-  100%{transform:translate(0,0)}
-}
-
-.hackTop{
-  font-size:26px;
-  font-weight:bold;
   animation:blink .15s infinite alternate;
 }
 @keyframes blink{
-  from{transform:scale(1)}
-  to{transform:scale(1.06)}
+  from{transform:scale(1);}
+  to{transform:scale(1.06);}
 }
-
+.hackBox{animation:shake .12s infinite;}
+@keyframes shake{
+  0%{transform:translate(0,0);}
+  25%{transform:translate(4px,-4px);}
+  50%{transform:translate(-4px,4px);}
+  75%{transform:translate(4px,4px);}
+  100%{transform:translate(0,0);}
+}
 .progress{
   width:100%;
   height:14px;
@@ -97,56 +85,46 @@ button{
   height:100%;
   width:0%;
   background:red;
+  transition:width .7s linear;
 }
-
-.hackProgress{
+.hackProgressText{
   margin-top:10px;
   font-size:13px;
   font-weight:bold;
-  animation:flash .5s infinite;
+  color:red;
+  animation:flash .6s infinite;
 }
 @keyframes flash{
-  0%{opacity:1}
-  50%{opacity:0}
-  100%{opacity:1}
-}
-
-.alert{
-  position:absolute;
-  color:red;
-  font-size:12px;
-  font-weight:bold;
-  animation:flash .3s infinite;
+  0%,100%{opacity:1;}
+  50%{opacity:0;}
 }
 
 /* ===== ENVELOPPE FINALE ===== */
+#finalEnvelope{
+  display:none;
+  background:none;
+  box-shadow:none;
+}
+
 .envelopeBox{
   width:260px;
   height:170px;
+  position:relative;
   background:#fff;
   border-radius:14px;
-  position:relative;
   overflow:hidden;
-  cursor:pointer;
-  animation:pulse 1.6s infinite;
-}
-@keyframes pulse{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.05)}
 }
 
 .flap{
   position:absolute;
   top:0;
+  left:0;
   width:100%;
   height:100%;
   background:#ff5fa2;
   clip-path:polygon(0 0,100% 0,50% 55%);
   transform-origin:top;
-  transition:1s;
-}
-.envelopeBox.open .flap{
-  transform:rotateX(180deg);
+  animation:openFlap 1.2s ease forwards;
 }
 
 .letter{
@@ -155,40 +133,79 @@ button{
   width:100%;
   height:100%;
   background:#ffd6e8;
+  text-align:center;
   padding-top:35px;
-  transition:1s;
+  animation:letterUp 1.2s ease forwards;
+  animation-delay:1s;
 }
-.envelopeBox.open .letter{
-  bottom:0;
+
+@keyframes openFlap{
+  to{transform:rotateX(180deg)}
+}
+@keyframes letterUp{
+  to{bottom:0}
+}
+
+.letter h1{color:#ff4081;font-size:30px}
+.letter p{color:#ff4081;font-size:18px}
+
+/* ===== CŒURS ===== */
+.heart{
+  position:absolute;
+  animation:heartFloat 5s ease-out forwards;
+}
+@keyframes heartFloat{
+  0%{transform:translateY(20px) scale(.5);opacity:0}
+  20%{opacity:.6}
+  80%{opacity:.6}
+  100%{transform:translateY(-60px) scale(1);opacity:0}
+}
+
+/* ===== CONFETTIS ===== */
+.confetti{
+  position:absolute;
+  animation:confettiSpin 6s linear forwards;
+}
+@keyframes confettiSpin{
+  from{transform:rotate(0deg);opacity:1}
+  to{transform:rotate(360deg);opacity:0}
 }
 </style>
 </head>
 
 <body>
 
-<div class="card" id="intro" style="display:block">
+<!-- INTRO -->
+<div class="card" id="intro">
   <h1>Pour Chaimaa ❤️</h1>
   <p>Clique sur l’enveloppe</p>
-  <img src="IMG_5431.jpeg" class="envelopeIntro" onclick="openIntro()">
+  <img src="IMG_5431.jpeg" class="envelopeIntro" onclick="openLetter()">
 </div>
 
+<!-- QUESTION -->
 <div class="card" id="question">
   <h1 id="qText">Veux-tu être ma future femme ? 💍</h1>
-  <button id="yes" onclick="next()">Oui ❤️</button>
+  <button id="yes" onclick="nextQuestion()">Oui ❤️</button>
   <button id="no" onmouseover="moveNo()">Non 💔</button>
 </div>
 
+<!-- HACK -->
 <div class="card" id="hack">
-  <div class="hackTop" id="hackTop">TRÈS BIEN</div>
-  <div class="progress"><div class="bar" id="bar"></div></div>
-  <div class="hackProgress">HACK PROGRESS : LOADING…</div>
+  <div class="hackBox">
+    <h2 id="hackTop">TRÈS BIEN</h2>
+    <p>JE VAIS TE HACKER MAINTENANT ⚠️</p>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="hackProgressText">HACK PROGRESS…</div>
+  </div>
 </div>
 
+<!-- ENVELOPPE FINALE -->
 <div class="card" id="finalEnvelope">
-  <div class="envelopeBox" id="env" onclick="openFinal()">
+  <div class="envelopeBox">
     <div class="flap"></div>
     <div class="letter">
-      <h1 id="text"></h1>
+      <h1>Je t’aime ❤️</h1>
+      <p>Joyeuse Saint Chaimaa Beauté 💖</p>
     </div>
   </div>
 </div>
@@ -200,21 +217,18 @@ const questions=[
   "T’es sûre ? 🤍"
 ];
 const hackMsgs=[
-  "TRÈS BIEN",
-  "JE VAIS TE HACKER",
-  "ACCÈS TOTAL",
-  "SYSTÈME COMPROMIS",
-  "HACK TERMINÉ"
+  "TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","ERREUR","TERMINÉ"
 ];
-
 let q=0,h=0;
 
-function openIntro(){
+window.onload=()=>intro.style.display="block";
+
+function openLetter(){
   intro.style.display="none";
   question.style.display="block";
 }
 
-function next(){
+function nextQuestion(){
   q++;
   if(q<questions.length){
     qText.innerText=questions[q];
@@ -229,41 +243,41 @@ function startHack(){
   const i=setInterval(()=>{
     hackTop.innerText=hackMsgs[h];
     bar.style.width=((h+1)/hackMsgs.length)*100+"%";
-    spawnAlert();
     h++;
     if(h>=hackMsgs.length){
       clearInterval(i);
-      setTimeout(()=>{
-        hack.style.display="none";
-        finalEnvelope.style.display="block";
-      },800);
+      setTimeout(showFinal,1000);
     }
   },900);
 }
 
-function spawnAlert(){
-  const a=document.createElement("div");
-  a.className="alert";
-  a.innerText="⚠️ ALERT ⚠️";
-  a.style.left=Math.random()*100+"%";
-  a.style.top=Math.random()*100+"%";
-  hack.appendChild(a);
-  setTimeout(()=>a.remove(),1200);
+function showFinal(){
+  hack.style.display="none";
+  finalEnvelope.style.display="block";
+  setInterval(spawnHeart,350);
+  setInterval(spawnConfetti,300);
 }
 
-function openFinal(){
-  env.classList.add("open");
-  type("Je t’aime ❤️", "text");
+function spawnHeart(){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML="❤️";
+  h.style.left=Math.random()*80+"%";
+  h.style.top=Math.random()*80+"%";
+  h.style.fontSize=18+Math.random()*20+"px";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),5000);
 }
 
-function type(t,id){
-  let i=0;
-  const el=document.getElementById(id);
-  el.innerHTML="";
-  const x=setInterval(()=>{
-    el.innerHTML+=t.charAt(i++);
-    if(i>=t.length) clearInterval(x);
-  },120);
+function spawnConfetti(){
+  const c=document.createElement("div");
+  c.className="confetti";
+  c.innerHTML="❤️";
+  c.style.left=Math.random()*100+"vw";
+  c.style.top=Math.random()*100+"vh";
+  c.style.fontSize=14+Math.random()*20+"px";
+  document.body.appendChild(c);
+  setTimeout(()=>c.remove(),6000);
 }
 
 function moveNo(){
@@ -273,3 +287,5 @@ function moveNo(){
 
 </body>
 </html>
+
+
