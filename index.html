@@ -168,7 +168,7 @@ button {
 </div>
 
 <!-- HACK -->
-<div class="hack" id="hack">
+<div class="hack" id="hack" style="display:none;">
   <div class="hack-box">
     <div class="hack-text" id="hackText">TRÈS BIEN</div>
     <div class="hack-static">
@@ -186,6 +186,11 @@ button {
   <p>Joyeuse Saint Chaimaa Beauté !!</p>
 </div>
 
+window.onload = () => {
+  document.getElementById("hack").style.display = "none";
+  document.getElementById("final").style.display = "none";
+};
+  
 <script>
 let step = 0;
 const messages = [
