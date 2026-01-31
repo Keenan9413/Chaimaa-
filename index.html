@@ -1,24 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💖 Pour Chaimaa</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
 }
 
+/* ACCUEIL */
+.container {
+  text-align: center;
+  color: #b0004f;
+  background: rgba(255,255,255,0.35);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.envelope img {
+  width: 100px;
+  cursor: pointer;
+  animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* LETTRE */
 .letter {
   display: none;
   background: white;
-  color: black;
   padding: 25px;
   border-radius: 15px;
-  width: 90%;
   max-width: 350px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  transform-origin: top;
-}
-
-@keyframes unfold {
-  to { transform: scaleY(1); }
-}
-
-.letter h2 {
-  font-size: 16px;
-  color: #555;
 }
 
 .main-text {
@@ -26,42 +53,40 @@
   margin: 20px 0;
 }
 
-.buttons {
-  position: relative;
-  height: 80px;
-}
-
 button {
   padding: 10px 20px;
-  font-size: 16px;
-  border: none;
   border-radius: 20px;
+  border: none;
   cursor: pointer;
 }
 
-#yes {
-  background: #ff4081;
-  color: white;
+#yes { background: #ff4081; color: white; }
+#no { background: #ddd; position: absolute; right: 0; }
+
+/* HACK */
+.hack-screen {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: black;
+  color: red;
+  font-family: monospace;
+  padding: 20px;
 }
 
-#no {
-  background: #ddd;
-  position: absolute;
-  right: 0;
+.progress-bar {
+  width: 100%;
+  height: 12px;
+  background: #333;
 }
 
-.heart {
-  position: absolute;
-  color: pink;
-  font-size: 20px;
-  animation: fall 5s linear forwards;
+.progress {
+  height: 100%;
+  width: 0%;
+  background: red;
 }
 
-@keyframes fall {
-  from { transform: translateY(-10vh); opacity: 1; }
-  to { transform: translateY(110vh); opacity: 0; }
-}
-
+/* FINAL */
 .final {
   display: none;
   background: white;
@@ -69,101 +94,88 @@ button {
   border-radius: 20px;
   text-align: center;
 }
-
-.final h1 {
-  color: red;
-}
-
-.final p {
-  color: hotpink;
-  font-size: 18px;
-}
 </style>
 </head>
 
 <body>
 
 <div class="container" id="start">
-  <h1>Pour Chaimaa Amirat 💌</h1>
+  <h1>Pour Chaimaa 💌</h1>
   <p>Clique sur l’enveloppe</p>
-
-  <img src="IMG_5431.jpeg" class="envelope" onclick="openLetter()" alt="Enveloppe">
+  <div class="envelope" onclick="openLetter()">
+    <img src="IMG_5431.jpeg">
+  </div>
 </div>
 
 <div class="letter" id="letter">
-  <h2>De Keenan, l’amour de ta vie ❤️</h2>
   <div class="main-text" id="message">Veux-tu être ma future femme ?</div>
-  <div class="buttons">
-    <button id="yes" onclick="yesClick()">Oui ❤️</button>
-    <button id="no" onmouseover="moveNo()">Non 😔</button>
+  <button id="yes" onclick="yesClick()">Oui ❤️</button>
+  <button id="no">Non 😔</button>
+</div>
+
+<div class="hack-screen" id="hack">
+  <h1>TRÈS BIEN</h1>
+  <div id="hackMessages"></div>
+  <div class="progress-bar">
+    <div class="progress" id="progress"></div>
   </div>
 </div>
 
 <div class="final" id="final">
   <h1>Je t’aime ❤️</h1>
-  <p>Tu as fait mon bonheur ! ❤️</p>
+  <p>Tu as fait mon bonheur</p>
 </div>
 
 <script>
 let step = 0;
 const messages = [
   "Veux-tu être ma future femme ?",
-  "T’es sûre 🤗",
-  "Re-réfléchis… 🫣"
+  "T’es sûre 😏",
+  "Dernière chance…"
 ];
 
-function vibrate() {
-  if (navigator.vibrate) navigator.vibrate(200);
-}
+const hackLines = [
+  "Connexion en cours...",
+  "Accès autorisé...",
+  "Téléchargement du cœur ❤️",
+  "Amour piraté avec succès"
+];
 
 function openLetter() {
-  document.getElementById("start").style.display = "none";
-  const letter = document.getElementById("letter");
+  start.style.display = "none";
   letter.style.display = "block";
-  letter.style.animation = "unfold 0.8s forwards";
-  setInterval(createHeart, 500);
 }
 
 function yesClick() {
-  vibrate();
   step++;
   if (step < messages.length) {
-    document.getElementById("message").innerText = messages[step];
+    message.innerText = messages[step];
   } else {
-    document.getElementById("letter").style.display = "none";
-    document.getElementById("final").style.display = "block";
-    confetti();
+    letter.style.display = "none";
+    startHack();
   }
 }
 
-function moveNo() {
-  const x = Math.random() * 120;
-  const y = Math.random() * 40;
-  document.getElementById("no").style.transform = `translate(-${x}px, ${y}px)`;
-}
-
-function createHeart() {
-  const heart = document.createElement("div");
-  heart.className = "heart";
-  heart.innerText = "💗";
-  heart.style.left = Math.random() * 100 + "vw";
-  document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 5000);
-}
-
-function confetti() {
-  for (let i = 0; i < 40; i++) {
-    const c = document.createElement("div");
-    c.innerText = "🎉";
-    c.style.position = "absolute";
-    c.style.left = Math.random() * 100 + "vw";
-    c.style.top = "-20px";
-    c.style.fontSize = "20px";
-    c.style.animation = "fall 3s linear forwards";
-    document.body.appendChild(c);
-    setTimeout(() => c.remove(), 3000);
-  }
+function startHack() {
+  hack.style.display = "block";
+  let i = 0;
+  let p = 0;
+  const interval = setInterval(() => {
+    hackMessages.innerHTML += hackLines[i] + "<br>";
+    p += 25;
+    progress.style.width = p + "%";
+    i++;
+    if (i >= hackLines.length) {
+      clearInterval(interval);
+      setTimeout(() => {
+        hack.style.display = "none";
+        final.style.display = "block";
+      }, 800);
+    }
+  }, 500);
 }
 </script>
 
 </body>
+</html>
+
