@@ -2,147 +2,137 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>💌</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pour Chaimaa 💖</title>
 
 <style>
-*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
-
 body{
   margin:0;
-  background:#000;
+  height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
-  height:100vh;
+  background:linear-gradient(135deg,#ffb6c1,#ff69b4);
+  font-family:Arial,sans-serif;
   overflow:hidden;
 }
 
-/* ---------- ENVELOPPE ---------- */
-#envelopeScreen{
+/* -------- ENVELOPPE -------- */
+#start{
   text-align:center;
+  background:rgba(255,255,255,.35);
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,.2);
 }
-
-#envelopeScreen img{
-  width:160px;
+#start img{
+  width:120px;
   cursor:pointer;
+  animation:bounce 1.5s infinite;
+}
+@keyframes bounce{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
 }
 
-#question{
-  color:#fff;
-  font-size:22px;
-  margin-top:20px;
-}
-
-.buttons button{
-  margin:15px;
-  padding:12px 30px;
-  font-size:18px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-}
-
-#yes{background:#ff4d6d;color:white}
-#no{background:#444;color:white}
-
-/* ---------- HACK ---------- */
-#hackScreen{
+/* -------- LETTRE -------- */
+#letter{
   display:none;
+  background:white;
+  padding:25px;
+  border-radius:15px;
   width:90%;
-  max-width:420px;
-  border:3px solid red;
-  padding:20px;
-  color:red;
+  max-width:350px;
   text-align:center;
-  box-shadow:0 0 25px red;
+  box-shadow:0 10px 30px rgba(0,0,0,.3);
+}
+.buttons{
+  position:relative;
+  height:70px;
+}
+button{
+  padding:10px 20px;
+  border:none;
+  border-radius:20px;
+  cursor:pointer;
+  font-size:16px;
+}
+#yes{background:#ff4081;color:white}
+#no{
+  background:#ddd;
+  position:absolute;
+  right:0;
 }
 
-#hackTitle{
-  font-size:30px;
+/* -------- HACK -------- */
+#hack{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:black;
+  color:red;
+  justify-content:center;
+  align-items:center;
+}
+.hackBox{
+  border:3px solid red;
+  padding:30px;
+  width:85%;
+  max-width:420px;
+  text-align:center;
+  box-shadow:0 0 20px red;
+}
+.hackMain{
+  font-size:28px;
   font-weight:bold;
-  margin-bottom:10px;
+  margin-bottom:15px;
 }
-
-#dynamicText{
-  font-size:24px;
-  font-weight:bold;
-  margin:20px 0;
-}
-
-#staticText{
+.hackStatic{
   font-size:14px;
-  opacity:.7;
+  opacity:.8;
   margin-bottom:20px;
 }
-
-.progress{
-  background:#222;
-  border-radius:20px;
-  overflow:hidden;
-  height:18px;
-}
-
 .bar{
+  width:100%;
+  height:14px;
+  background:#222;
+  border-radius:10px;
+  overflow:hidden;
+}
+.barFill{
   height:100%;
   width:0%;
   background:red;
-  transition:width .8s ease;
+  transition:width .6s linear;
 }
 
-/* ---------- FINAL ---------- */
+/* -------- FINAL -------- */
 #final{
   display:none;
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.7);
-  display:flex;
+  background:rgba(0,0,0,.6);
   justify-content:center;
   align-items:center;
-  flex-direction:column;
 }
-
 .card{
-  background:#fff;
-  border-radius:20px;
+  background:#ffe6f0;
   padding:30px;
+  border-radius:20px;
   text-align:center;
-  box-shadow:0 0 40px pink;
+  box-shadow:0 0 30px hotpink;
 }
+.card h1{color:#e6005c}
+.card p{color:#ff1493;font-size:18px}
 
-.card h1{
-  color:#e6005c;
-  font-size:36px;
-}
-
-.card p{
-  font-size:18px;
-  color:#555;
-}
-
-/* ---------- COEURS ---------- */
-.heart, .confetti{
+/* -------- COEURS & CONFETTIS -------- */
+.heart,.confetti{
   position:absolute;
-  top:-20px;
   animation:fall linear forwards;
 }
-
-.heart{
-  color:pink;
-  font-size:24px;
-}
-
-.confetti{
-  width:8px;
-  height:8px;
-  background:red;
-}
-
 @keyframes fall{
-  to{
-    transform:translateY(110vh) rotate(360deg);
-    opacity:0;
-  }
+  from{transform:translateY(-10vh);opacity:1}
+  to{transform:translateY(110vh);opacity:0}
 }
 </style>
 </head>
@@ -150,24 +140,32 @@ body{
 <body>
 
 <!-- ENVELOPPE -->
-<div id="envelopeScreen">
-  <img src="envelope.png" alt="enveloppe">
-  <div id="question">Veux-tu être ma future femme ? 💍</div>
+<div id="start">
+  <h2>Pour Chaimaa 💌</h2>
+  <p>Clique sur l’enveloppe</p>
+  <img src="IMG_5431.jpeg" onclick="openLetter()">
+</div>
+
+<!-- LETTRE -->
+<div id="letter">
+  <h3>De Keenan ❤️</h3>
+  <p id="question">Veux-tu être ma future femme ?</p>
   <div class="buttons">
-    <button id="yes">Oui ❤️</button>
-    <button id="no">Non</button>
+    <button id="yes" onclick="yesClick()">Oui ❤️</button>
+    <button id="no" onmouseover="moveNo()">Non 😔</button>
   </div>
 </div>
 
 <!-- HACK -->
-<div id="hackScreen">
-  <div id="hackTitle">⚠️ HACK EN COURS ⚠️</div>
-  <div id="dynamicText"></div>
-  <div id="staticText">
-    TRÈS BIEN JE VAIS TE HACKER MAINTENANT C’EST TANT PIS POUR TOI ⚠️
-  </div>
-  <div class="progress">
-    <div class="bar" id="bar"></div>
+<div id="hack">
+  <div class="hackBox">
+    <div class="hackMain" id="hackMain">TRÈS BIEN</div>
+    <div class="hackStatic">
+      TRÈS BIEN JE VAIS TE HACKER MAINTENANT<br>
+      C’EST TANT PIS POUR TOI ⚠️
+    </div>
+    <div class="bar"><div class="barFill" id="bar"></div></div>
+    <p style="margin-top:10px">HACK PROGRESS : LOADING…</p>
   </div>
 </div>
 
@@ -175,20 +173,13 @@ body{
 <div id="final">
   <div class="card">
     <h1>Je t’aime ❤️</h1>
-    <p> Joyeuse Saint Chaimaa Beauté !!</p>
+    <p>Joyeuse Saint Chaimaa Beauté !! 💝</p>
   </div>
 </div>
 
 <script>
-const yes=document.getElementById("yes");
-const no=document.getElementById("no");
-const envelope=document.getElementById("envelopeScreen");
-const hack=document.getElementById("hackScreen");
-const dynamic=document.getElementById("dynamicText");
-const bar=document.getElementById("bar");
-const final=document.getElementById("final");
-
-const messages=[
+let yesCount=0;
+const hackMessages=[
   "TRÈS BIEN",
   "JE VAIS TE HACKER",
   "MAINTENANT",
@@ -200,57 +191,68 @@ const messages=[
   "ERREUR SYSTÈME"
 ];
 
-no.onclick=()=>{
-  no.style.transform="translateX(20px)";
-  setTimeout(()=>no.style.transform="translateX(0)",300);
-};
+function openLetter(){
+  start.style.display="none";
+  letter.style.display="block";
+}
 
-yes.onclick=()=>{
-  envelope.style.display="none";
-  hack.style.display="block";
-  startHack();
-};
+function moveNo(){
+  no.style.transform=`translate(${Math.random()*120}px,${Math.random()*40}px)`;
+}
+
+function yesClick(){
+  yesCount++;
+  if(yesCount>=3){
+    letter.style.display="none";
+    startHack();
+  }
+}
 
 function startHack(){
+  hack.style.display="flex";
   let i=0;
-  const step=100/messages.length;
-
   const interval=setInterval(()=>{
-    dynamic.textContent=messages[i];
-    bar.style.width=((i+1)*step)+"%";
+    hackMain.innerText=hackMessages[i];
+    bar.style.width=((i+1)/hackMessages.length*100)+"%";
     i++;
-
-    if(i===messages.length){
+    if(i===hackMessages.length){
       clearInterval(interval);
-      setTimeout(showFinal,1200);
+      setTimeout(showFinal,800);
     }
-  },1200);
+  },900);
 }
 
 function showFinal(){
   hack.style.display="none";
   final.style.display="flex";
-
-  for(let i=0;i<80;i++){
-    createFalling();
+  for(let i=0;i<40;i++){
+    createHeart();
+    createConfetti();
   }
 }
 
-function createFalling(){
-  const el=document.createElement("div");
-  const isHeart=Math.random()>0.5;
+function createHeart(){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText="💖";
+  h.style.left=Math.random()*100+"vw";
+  h.style.fontSize=20+Math.random()*20+"px";
+  h.style.animationDuration=3+Math.random()*2+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),5000);
+}
 
-  el.className=isHeart?"heart":"confetti";
-  el.textContent=isHeart?"❤️":"";
-  el.style.left=Math.random()*100+"vw";
-  el.style.animationDuration=(2+Math.random()*3)+"s";
-  el.style.background=isHeart?"":"hsl("+Math.random()*360+",100%,50%)";
-
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),5000);
+function createConfetti(){
+  const c=document.createElement("div");
+  c.className="confetti";
+  c.innerText="🎉";
+  c.style.left=Math.random()*100+"vw";
+  c.style.fontSize=14+Math.random()*16+"px";
+  c.style.animationDuration=3+Math.random()*2+"s";
+  document.body.appendChild(c);
+  setTimeout(()=>c.remove(),5000);
 }
 </script>
 
 </body>
 </html>
-
