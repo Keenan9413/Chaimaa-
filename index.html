@@ -99,43 +99,64 @@ button{
   50%{opacity:0;}
 }
 
-/* ===== ENVELOPPE FINALE (STYLE IMAGE) ===== */
+/* ===== ENVELOPPE FINALE ===== */
 #finalEnvelope{
   background:none;
   box-shadow:none;
 }
 
-.finalEnvelopeBox{
-  width:180px;
-  height:120px;
+.envelopeContainer{
+  width:200px;
+  height:130px;
   background:#fff;
-  border-radius:12px;
+  border-radius:14px;
+  position:relative;
+  cursor:pointer;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+  overflow:hidden;
+}
+
+.envelopeHeart{
+  position:absolute;
+  inset:0;
   display:flex;
   justify-content:center;
   align-items:center;
-  font-size:60px;
-  cursor:pointer;
-  transition:.6s;
-  box-shadow:0 10px 25px rgba(0,0,0,.25);
+  font-size:55px;
+  transition:.4s;
 }
 
-.finalEnvelopeBox.open{
-  transform:scale(1.1);
+.letterInside{
+  position:absolute;
+  bottom:-100%;
+  width:100%;
+  height:100%;
+  background:#ffd6e8;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  transition:1s ease;
+  padding:10px;
 }
 
-.finalLetter{
-  display:none;
-  margin-top:20px;
+.envelopeContainer.open .letterInside{
+  bottom:0;
 }
 
-.finalLetter h1{
+.envelopeContainer.open .envelopeHeart{
+  opacity:0;
+}
+
+/* ===== TEXTE ===== */
+.letterInside h1{
   color:#ff4081;
-  font-size:32px;
-  min-height:40px;
+  font-size:30px;
+  min-height:38px;
 }
-.finalLetter p{
+.letterInside p{
   color:#ff4081;
-  font-size:18px;
+  font-size:17px;
 }
 
 /* ===== CŒURS ===== */
@@ -180,10 +201,12 @@ button{
 
 <!-- ENVELOPPE FINALE -->
 <div class="card" id="finalEnvelope">
-  <div class="finalEnvelopeBox" id="finalEnv" onclick="openFinalEnvelope()">💌</div>
-  <div class="finalLetter" id="finalLetter">
-    <h1 id="typeText"></h1>
-    <p>Joyeuse Saint Chaimaa Beauté 💖</p>
+  <div class="envelopeContainer" id="env" onclick="openFinal()">
+    <div class="envelopeHeart">💌</div>
+    <div class="letterInside">
+      <h1 id="typeText"></h1>
+      <p>Joyeuse Saint Chaimaa Beauté 💖</p>
+    </div>
   </div>
 </div>
 
@@ -234,10 +257,9 @@ function showFinal(){
   setInterval(spawnHeart,400);
 }
 
-function openFinalEnvelope(){
-  finalEnv.classList.add("open");
-  finalLetter.style.display="block";
-  typeWriter("Je t’aime ❤️", "typeText", 120);
+function openFinal(){
+  env.classList.add("open");
+  typeWriter("Je t’aime ❤️","typeText",120);
 }
 
 function typeWriter(text,id,speed){
