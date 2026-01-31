@@ -2,185 +2,172 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<title>💌</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pour Chaimaa ❤️</title>
 
 <style>
-/* BASE */
-body {
-  margin: 0;
-  height: 100vh;
-  background: linear-gradient(135deg, #ffb6c1, #ff69b4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: Arial, sans-serif;
-  overflow: hidden;
+*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+
+body{
+  margin:0;
+  background:#000;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  overflow:hidden;
 }
 
-/* ACCUEIL */
-#start {
-  text-align: center;
-  background: rgba(255,255,255,0.4);
-  padding: 30px;
-  border-radius: 20px;
+/* ---------- ENVELOPPE ---------- */
+#envelopeScreen{
+  text-align:center;
 }
 
-.envelope img {
-  width: 120px;
-  cursor: pointer;
-  animation: bounce 1.5s infinite;
+#envelopeScreen img{
+  width:160px;
+  cursor:pointer;
 }
 
-@keyframes bounce {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+#question{
+  color:#fff;
+  font-size:22px;
+  margin-top:20px;
 }
 
-/* QUESTION */
-#letter {
-  display: none;
-  background: white;
-  padding: 25px;
-  border-radius: 15px;
-  text-align: center;
+.buttons button{
+  margin:15px;
+  padding:12px 30px;
+  font-size:18px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
 }
 
-.buttons {
-  position: relative;
-  height: 70px;
+#yes{background:#ff4d6d;color:white}
+#no{background:#444;color:white}
+
+/* ---------- HACK ---------- */
+#hackScreen{
+  display:none;
+  width:90%;
+  max-width:420px;
+  border:3px solid red;
+  padding:20px;
+  color:red;
+  text-align:center;
+  box-shadow:0 0 25px red;
 }
 
-button {
-  padding: 10px 20px;
-  border-radius: 20px;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
+#hackTitle{
+  font-size:30px;
+  font-weight:bold;
+  margin-bottom:10px;
 }
 
-#yes {
-  background: #ff4081;
-  color: white;
+#dynamicText{
+  font-size:24px;
+  font-weight:bold;
+  margin:20px 0;
 }
 
-#no {
-  background: #ddd;
-  position: absolute;
-  right: 0;
+#staticText{
+  font-size:14px;
+  opacity:.7;
+  margin-bottom:20px;
 }
 
-/* HACK */
-#hack {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: black;
-  color: red;
-  font-family: monospace;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+.progress{
+  background:#222;
+  border-radius:20px;
+  overflow:hidden;
+  height:18px;
 }
 
-.hack-box {
-  border: 2px solid red;
-  padding: 25px;
-  min-width: 280px;
-  text-align: center;
-  font-weight: bold;
-  animation: flash 0.3s;
+.bar{
+  height:100%;
+  width:0%;
+  background:red;
+  transition:width .8s ease;
 }
 
-@keyframes flash {
-  from { opacity: 0; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1); }
+/* ---------- FINAL ---------- */
+#final{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.7);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
 }
 
-.progress-bar {
-  margin-top: 20px;
-  width: 280px;
-  height: 12px;
-  background: #333;
+.card{
+  background:#fff;
+  border-radius:20px;
+  padding:30px;
+  text-align:center;
+  box-shadow:0 0 40px pink;
 }
 
-.progress {
-  height: 100%;
-  width: 0%;
-  background: red;
+.card h1{
+  color:#e6005c;
+  font-size:36px;
 }
 
-/* FINAL */
-#final {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
+.card p{
+  font-size:18px;
+  color:#555;
 }
 
-.card {
-  background: #ffe6ef;
-  border: 4px solid #ff69b4;
-  border-radius: 25px;
-  padding: 30px 40px;
-  text-align: center;
-  animation: pop 0.8s ease forwards;
+/* ---------- COEURS ---------- */
+.heart, .confetti{
+  position:absolute;
+  top:-20px;
+  animation:fall linear forwards;
 }
 
-.card h1 {
-  color: #ff2f6d;
-  font-size: 40px;
+.heart{
+  color:pink;
+  font-size:24px;
 }
 
-.card p {
-  color: #ff5f9e;
-  font-size: 20px;
+.confetti{
+  width:8px;
+  height:8px;
+  background:red;
 }
 
-@keyframes pop {
-  from { transform: scale(0.5); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-/* CONFETTIS & COEURS */
-.fall {
-  position: fixed;
-  top: -20px;
-  font-size: 22px;
-  animation: fall 3s linear forwards;
-}
-
-@keyframes fall {
-  to { transform: translateY(110vh); opacity: 0; }
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(360deg);
+    opacity:0;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- ACCUEIL -->
-<div id="start">
-  <h1>Pour Chaimaa 💌</h1>
-  <p>Clique sur l’enveloppe</p>
-  <div class="envelope" onclick="openLetter()">
-    <img src="IMG_5431.jpeg">
-  </div>
-</div>
-
-<!-- QUESTION -->
-<div id="letter">
-  <p>Veux-tu être ma future femme ?</p>
+<!-- ENVELOPPE -->
+<div id="envelopeScreen">
+  <img src="envelope.png" alt="enveloppe">
+  <div id="question">Veux-tu être ma future femme ? 💍</div>
   <div class="buttons">
-    <button id="yes" onclick="startHack()">Oui ❤️</button>
-    <button id="no" onmouseover="moveNo()">Non 😔</button>
+    <button id="yes">Oui ❤️</button>
+    <button id="no">Non</button>
   </div>
 </div>
 
 <!-- HACK -->
-<div id="hack">
-  <div class="hack-box" id="hackBox">TRÈS BIEN</div>
-  <div class="progress-bar">
-    <div class="progress" id="progress"></div>
+<div id="hackScreen">
+  <div id="hackTitle">⚠️ HACK EN COURS ⚠️</div>
+  <div id="dynamicText"></div>
+  <div id="staticText">
+    TRÈS BIEN JE VAIS TE HACKER MAINTENANT C’EST TANT PIS POUR TOI ⚠️
+  </div>
+  <div class="progress">
+    <div class="bar" id="bar"></div>
   </div>
 </div>
 
@@ -188,77 +175,82 @@ button {
 <div id="final">
   <div class="card">
     <h1>Je t’aime ❤️</h1>
-    <p>Joyeuse Saint Chaimaa Beauté !!</p>
+    <p> Joyeuse Saint Chaimaa Beauté !!</p>
   </div>
 </div>
 
 <script>
-function openLetter() {
-  document.getElementById("start").style.display = "none";
-  document.getElementById("letter").style.display = "block";
-}
+const yes=document.getElementById("yes");
+const no=document.getElementById("no");
+const envelope=document.getElementById("envelopeScreen");
+const hack=document.getElementById("hackScreen");
+const dynamic=document.getElementById("dynamicText");
+const bar=document.getElementById("bar");
+const final=document.getElementById("final");
 
-function moveNo() {
-  const btn = document.getElementById("no");
-  btn.style.transform =
-    `translate(${Math.random()*120}px, ${Math.random()*40}px)`;
-}
+const messages=[
+  "TRÈS BIEN",
+  "JE VAIS TE HACKER",
+  "MAINTENANT",
+  "C’EST TANT PIS POUR TOI",
+  "⚠️ HACK EN COURS ⚠️",
+  "SYSTÈME COMPROMIS",
+  "TRÈS BIEN",
+  "SYSTÈME HS",
+  "ERREUR SYSTÈME"
+];
 
-function startHack() {
-  document.getElementById("letter").style.display = "none";
-  const hack = document.getElementById("hack");
-  hack.style.display = "flex";
+no.onclick=()=>{
+  no.style.transform="translateX(20px)";
+  setTimeout(()=>no.style.transform="translateX(0)",300);
+};
 
-  const messages = [
-    "TRÈS BIEN JE VAIS TE HACKER MAINTENANT",
-    "JE VAIS TE HACKER",
-    "MAINTENANT",
-    "C’EST TANT PIS POUR TOI",
-    "⚠️ HACK EN COURS ⚠️",
-    "SYSTÈME COMPROMIS",
-    "SYSTÈME HS",
-    "ERREUR SYSTÈME"
-  ];
+yes.onclick=()=>{
+  envelope.style.display="none";
+  hack.style.display="block";
+  startHack();
+};
 
-  let i = 0;
-  const step = 100 / messages.length;
+function startHack(){
+  let i=0;
+  const step=100/messages.length;
 
-  const interval = setInterval(() => {
-    const box = document.getElementById("hackBox");
-    box.innerText = messages[i];
-    box.style.animation = "none";
-    box.offsetHeight;
-    box.style.animation = "flash 0.3s";
-
-    document.getElementById("progress").style.width =
-      ((i + 1) * step) + "%";
-
+  const interval=setInterval(()=>{
+    dynamic.textContent=messages[i];
+    bar.style.width=((i+1)*step)+"%";
     i++;
 
-    if (i >= messages.length) {
+    if(i===messages.length){
       clearInterval(interval);
-      setTimeout(showFinal, 800);
+      setTimeout(showFinal,1200);
     }
-  }, 700);
+  },1200);
 }
 
-function showFinal() {
-  document.getElementById("hack").style.display = "none";
-  const final = document.getElementById("final");
-  final.style.display = "flex";
-  final.style.justifyContent = "center";
-  final.style.alignItems = "center";
+function showFinal(){
+  hack.style.display="none";
+  final.style.display="flex";
 
-  for (let i = 0; i < 50; i++) {
-    const e = document.createElement("div");
-    e.className = "fall";
-    e.innerText = Math.random() > 0.5 ? "🎉" : "💖";
-    e.style.left = Math.random() * 100 + "vw";
-    document.body.appendChild(e);
-    setTimeout(() => e.remove(), 3000);
+  for(let i=0;i<80;i++){
+    createFalling();
   }
+}
+
+function createFalling(){
+  const el=document.createElement("div");
+  const isHeart=Math.random()>0.5;
+
+  el.className=isHeart?"heart":"confetti";
+  el.textContent=isHeart?"❤️":"";
+  el.style.left=Math.random()*100+"vw";
+  el.style.animationDuration=(2+Math.random()*3)+"s";
+  el.style.background=isHeart?"":"hsl("+Math.random()*360+",100%,50%)";
+
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),5000);
 }
 </script>
 
 </body>
 </html>
+
