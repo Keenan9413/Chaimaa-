@@ -19,7 +19,6 @@ body{
   font-family:Arial,sans-serif;
   overflow:hidden;
 }
-
 @keyframes bgMove{
   0%{background-position:0% 50%}
   50%{background-position:100% 50%}
@@ -89,6 +88,10 @@ button{
   display:none;
   background:none;
   box-shadow:none;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
 }
 
 .envelopeBox{
@@ -101,7 +104,6 @@ button{
   cursor:pointer;
   animation:pulse 1.6s infinite;
 }
-
 @keyframes pulse{
   0%,100%{transform:scale(1)}
   50%{transform:scale(1.04)}
@@ -118,7 +120,6 @@ button{
   transform-origin:top;
   transition:transform 1s ease;
 }
-
 .envelopeBox.open .flap{
   transform:rotateX(180deg);
 }
@@ -133,7 +134,6 @@ button{
   padding-top:35px;
   transition:bottom 1s ease;
 }
-
 .envelopeBox.open .letter{
   bottom:0;
 }
@@ -143,16 +143,11 @@ button{
   font-size:30px;
   min-height:40px;
 }
-
 .letter p{
   color:#ff4081;
   font-size:18px;
   opacity:0;
   transition:opacity 1s ease;
-}
-
-.envelopeBox.open .letter p{
-  opacity:1;
 }
 
 /* ===== CŒURS FOND ===== */
@@ -215,7 +210,7 @@ let q=0,h=0;
 window.onload=()=>{
   intro.style.display="block";
   setInterval(spawnBgHeart,500);
-}
+};
 
 function openLetter(){
   intro.style.display="none";
@@ -242,33 +237,39 @@ function startHack(){
       clearInterval(i);
       setTimeout(()=>{
         hack.style.display="none";
-        finalEnvelope.style.display="block";
+        finalEnvelope.style.display="flex";
       },800);
     }
   },900);
 }
 
-/* ===== OUVERTURE ENVELOPPE + TEXTE ===== */
 function openFinalLetter(){
   const box=document.getElementById("envBox");
+  const sub=document.getElementById("finalSub");
+
   if(box.classList.contains("open")) return;
+
   box.classList.add("open");
-  typeWriter("Je t’aime ❤️", "typeText", 120);
+  sub.style.opacity=0;
+
+  typeWriter("Je t’aime ❤️","typeText",120,()=>{
+    sub.style.opacity=1;
+  });
 }
 
-/* ===== EFFET MACHINE À ÉCRIRE ===== */
-function typeWriter(text,id,speed){
+function typeWriter(text,id,speed,callback){
   let i=0;
   const el=document.getElementById(id);
   el.innerHTML="";
   const interval=setInterval(()=>{
-    el.innerHTML+=text.charAt(i);
-    i++;
-    if(i>=text.length) clearInterval(interval);
+    el.innerHTML+=text.charAt(i++);
+    if(i>=text.length){
+      clearInterval(interval);
+      if(callback) callback();
+    }
   },speed);
 }
 
-/* ===== CŒURS FOND ===== */
 function spawnBgHeart(){
   const h=document.createElement("div");
   h.className="bgHeart";
