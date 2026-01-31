@@ -47,11 +47,29 @@ button{
   cursor:pointer;
 }
 
-/* HACK */
+/* ===== HACK MODE ===== */
 #hack{
   background:black;
   color:red;
   border:4px solid red;
+  animation: glitch 0.15s infinite alternate;
+}
+
+@keyframes glitch{
+  from{transform:scale(1);}
+  to{transform:scale(1.05);}
+}
+
+.hackBox{
+  animation: shake 0.15s infinite;
+}
+
+@keyframes shake{
+  0%{transform:translate(0,0);}
+  25%{transform:translate(3px,-3px);}
+  50%{transform:translate(-3px,3px);}
+  75%{transform:translate(3px,3px);}
+  100%{transform:translate(0,0);}
 }
 
 .hackTop{
@@ -65,10 +83,24 @@ button{
   font-weight:bold;
 }
 
+.alert{
+  position:absolute;
+  color:red;
+  font-weight:bold;
+  font-size:14px;
+  animation: flash 0.5s infinite;
+}
+
+@keyframes flash{
+  0%{opacity:1;}
+  50%{opacity:0;}
+  100%{opacity:1;}
+}
+
 .progress{
   width:100%;
   height:14px;
-  background:#333;
+  background:#330000;
   border-radius:10px;
   margin-top:15px;
   overflow:hidden;
@@ -81,29 +113,18 @@ button{
   transition:width .6s linear;
 }
 
-/* FINAL */
+/* ===== FINAL ===== */
 #final h1{color:#ff4081;font-size:32px;}
 #final p{color:#ff4081;font-size:18px;}
 
-.heart{
+.heart, .confetti{
   position:absolute;
-  animation:burst 1.6s ease-out forwards;
+  animation:burst 1.8s ease-out forwards;
 }
 
 @keyframes burst{
   0%{transform:scale(0);opacity:1;}
-  100%{transform:scale(1.2) translateY(-40px);opacity:0;}
-}
-
-/* CONFETTIS */
-.confetti{
-  position:fixed;
-  top:-10px;
-  animation:fall 3s linear forwards;
-}
-
-@keyframes fall{
-  to{transform:translateY(110vh) rotate(360deg); opacity:0;}
+  100%{transform:scale(1.4) translateY(-40px);opacity:0;}
 }
 </style>
 </head>
@@ -123,13 +144,15 @@ button{
 </div>
 
 <div class="card" id="hack">
-  <div class="hackTop" id="hackTop">TRÈS BIEN</div>
-  <div class="hackFixed">
-    TRÈS BIEN JE VAIS TE HACKER MAINTENANT<br>
-    C’EST TANT PIS POUR TOI ⚠️
-  </div>
-  <div class="progress">
-    <div class="bar" id="bar"></div>
+  <div class="hackBox">
+    <div class="hackTop" id="hackTop">TRÈS BIEN</div>
+    <div class="hackFixed">
+      TRÈS BIEN JE VAIS TE HACKER MAINTENANT<br>
+      C’EST TANT PIS POUR TOI ⚠️
+    </div>
+    <div class="progress">
+      <div class="bar" id="bar"></div>
+    </div>
   </div>
 </div>
 
@@ -149,14 +172,13 @@ const hackMsgs=[
   "TRÈS BIEN",
   "JE VAIS TE HACKER",
   "MAINTENANT",
-  "⚠️ HACK EN COURS ⚠️",
+  "⚠️ ALERTE SYSTÈME ⚠️",
   "SYSTÈME COMPROMIS",
   "SYSTÈME HS",
-  "ERREUR SYSTÈME"
+  "ERREUR CRITIQUE"
 ];
 
-let qStep=0;
-let hStep=0;
+let qStep=0, hStep=0;
 
 window.onload=()=>intro.style.display="block";
 
@@ -167,8 +189,8 @@ function openLetter(){
 
 function nextQuestion(){
   qStep++;
-  if(qStep < questions.length){
-    qText.innerText = questions[qStep];
+  if(qStep<questions.length){
+    qText.innerText=questions[qStep];
   }else{
     question.style.display="none";
     startHack();
@@ -177,26 +199,40 @@ function nextQuestion(){
 
 function startHack(){
   hack.style.display="block";
+  spawnAlerts();
+
   const interval=setInterval(()=>{
     hackTop.innerText=hackMsgs[hStep];
     bar.style.width=((hStep+1)/hackMsgs.length)*100+"%";
     hStep++;
     if(hStep>=hackMsgs.length){
       clearInterval(interval);
-      setTimeout(showFinal,700);
+      setTimeout(showFinal,800);
     }
-  },900);
+  },850);
+}
+
+function spawnAlerts(){
+  for(let i=0;i<15;i++){
+    const a=document.createElement("div");
+    a.className="alert";
+    a.innerText="⚠️ ALERT ⚠️";
+    a.style.left=Math.random()*100+"%";
+    a.style.top=Math.random()*100+"%";
+    hack.appendChild(a);
+    setTimeout(()=>a.remove(),2000);
+  }
 }
 
 function showFinal(){
   hack.style.display="none";
   final.style.display="block";
   burstHearts();
-  launchConfetti();
+  burstConfetti();
 }
 
 function burstHearts(){
-  for(let i=0;i<35;i++){
+  for(let i=0;i<30;i++){
     const h=document.createElement("div");
     h.className="heart";
     h.innerHTML="❤️";
@@ -204,19 +240,20 @@ function burstHearts(){
     h.style.top=Math.random()*70+"%";
     h.style.fontSize=16+Math.random()*22+"px";
     final.appendChild(h);
-    setTimeout(()=>h.remove(),1600);
+    setTimeout(()=>h.remove(),1800);
   }
 }
 
-function launchConfetti(){
+function burstConfetti(){
   for(let i=0;i<40;i++){
     const c=document.createElement("div");
     c.className="confetti";
     c.innerHTML="🎉";
     c.style.left=Math.random()*100+"vw";
+    c.style.top=Math.random()*100+"vh";
     c.style.fontSize=14+Math.random()*20+"px";
     document.body.appendChild(c);
-    setTimeout(()=>c.remove(),3000);
+    setTimeout(()=>c.remove(),1800);
   }
 }
 
@@ -227,3 +264,4 @@ function moveNo(){
 
 </body>
 </html>
+
