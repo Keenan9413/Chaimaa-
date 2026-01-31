@@ -3,265 +3,255 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pour Chaimaa 💖</title>
+<title>Pour Chaimaa ❤️</title>
 
 <style>
-body{
-  margin:0;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:linear-gradient(135deg,#ffb6c1,#ff69b4);
-  font-family:Arial,sans-serif;
-  overflow:hidden;
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg,#ffb6c1,#ff69b4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
 }
 
-/* ===== ÉCRAN DÉPART ===== */
-#start{
-  text-align:center;
-  background:rgba(255,255,255,.35);
-  padding:30px;
-  border-radius:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,.2);
-}
-#start img{
-  width:120px;
-  cursor:pointer;
-  animation:bounce 1.5s infinite;
-}
-@keyframes bounce{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-10px)}
+/* ---------- START ---------- */
+.container {
+  text-align: center;
+  background: rgba(255,255,255,0.35);
+  padding: 30px;
+  border-radius: 20px;
+  color: #b0004f;
 }
 
-/* ===== LETTRE ===== */
-#letter{
-  display:none;
-  background:white;
-  padding:25px;
-  border-radius:15px;
-  width:90%;
-  max-width:350px;
-  text-align:center;
-  box-shadow:0 10px 30px rgba(0,0,0,.3);
+.envelope img {
+  width: 120px;
+  cursor: pointer;
+  animation: bounce 1.5s infinite;
 }
-.buttons{
-  position:relative;
-  height:70px;
+
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
-button{
-  padding:10px 20px;
-  border:none;
-  border-radius:20px;
-  cursor:pointer;
-  font-size:16px;
+
+/* ---------- LETTER ---------- */
+.letter, .hack, .final {
+  display: none;
 }
-#yes{background:#ff4081;color:white}
-#no{
+
+.letter {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  max-width: 350px;
+  text-align: center;
+}
+
+.buttons {
+  position: relative;
+  height: 70px;
+}
+
+button {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#yes { background:#ff4081;color:white; }
+#no {
   background:#ddd;
   position:absolute;
   right:0;
 }
 
-/* ===== HACK ===== */
-#hack{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:black;
-  color:red;
-  justify-content:center;
-  align-items:center;
-}
-.hackBox{
-  border:3px solid red;
-  padding:30px;
-  width:85%;
-  max-width:420px;
-  text-align:center;
-  box-shadow:0 0 25px red;
-}
-.hackMain{
-  font-size:28px;
-  font-weight:bold;
-  margin-bottom:15px;
-}
-.hackStatic{
-  font-size:14px;
-  opacity:.8;
-  margin-bottom:20px;
-}
-.bar{
-  width:100%;
-  height:14px;
-  background:#222;
-  border-radius:10px;
-  overflow:hidden;
-}
-.barFill{
-  height:100%;
-  width:0%;
-  background:red;
-  transition:width .6s linear;
+/* ---------- HACK MODE ---------- */
+.hack {
+  position: fixed;
+  inset: 0;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* ===== FINAL ===== */
-#final{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  justify-content:center;
-  align-items:center;
+.hack-box {
+  border: 2px solid red;
+  padding: 25px;
+  width: 80%;
+  max-width: 400px;
+  text-align: center;
+  animation: flicker 0.15s infinite alternate;
 }
-.card{
-  background:#ffe6f0;
-  padding:30px;
-  border-radius:20px;
-  text-align:center;
-  box-shadow:0 0 35px hotpink;
-}
-.card h1{color:#e6005c}
-.card p{color:#ff1493;font-size:18px}
 
-/* ===== EFFETS ===== */
-.heart,.confetti{
-  position:absolute;
-  animation:fall linear forwards;
+@keyframes flicker {
+  from { opacity: 1; }
+  to { opacity: 0.85; }
 }
-@keyframes fall{
-  from{transform:translateY(-10vh);opacity:1}
-  to{transform:translateY(110vh);opacity:0}
+
+.hack-text {
+  color: red;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.hack-static {
+  color: red;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.progress {
+  height: 10px;
+  background: #330000;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 15px;
+}
+
+.bar {
+  height: 100%;
+  width: 0%;
+  background: red;
+  transition: width 0.5s;
+}
+
+/* ---------- FINAL ---------- */
+.final {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.final h1 { color:red; }
+.final p { color:hotpink;font-size:18px; }
+
+.heart, .confetti {
+  position: absolute;
+  animation: fall 5s linear forwards;
+}
+
+@keyframes fall {
+  from { transform: translateY(-10vh); opacity:1; }
+  to { transform: translateY(110vh); opacity:0; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- DÉPART -->
-<div id="start">
-  <h2>Pour Chaimaa 💌</h2>
+<!-- START -->
+<div class="container" id="start">
+  <h1>Pour Chaimaa Amirat 💌</h1>
   <p>Clique sur l’enveloppe</p>
-  <img src="IMG_5431.jpeg" id="env">
+  <div class="envelope" onclick="openLetter()">
+    <img src="IMG_5431.jpeg">
+  </div>
 </div>
 
-<!-- LETTRE -->
-<div id="letter">
+<!-- LETTER -->
+<div class="letter" id="letter">
   <h3>De Keenan ❤️</h3>
-  <p id="proposalText">Veux-tu être ma future femme ?</p>
+  <p id="message">Veux-tu être ma future femme ?</p>
   <div class="buttons">
-    <button id="yes">Oui ❤️</button>
-    <button id="no">Non 😔</button>
+    <button id="yes" onclick="yesClick()">Oui ❤️</button>
+    <button id="no" onmouseover="moveNo()">Non 😔</button>
   </div>
 </div>
 
 <!-- HACK -->
-<div id="hack">
-  <div class="hackBox">
-    <div class="hackMain" id="hackMain">TRÈS BIEN</div>
-    <div class="hackStatic">
-      TRÈS BIEN JE VAIS TE HACKER MAINTENANT<br>
-      C’EST TANT PIS POUR TOI ⚠️
+<div class="hack" id="hack">
+  <div class="hack-box">
+    <div class="hack-text" id="hackText">TRÈS BIEN</div>
+    <div class="hack-static">
+      TRÈS BIEN JE VAIS TE HACKER MAINTENANT C’EST TANT PIS POUR TOI ⚠️
     </div>
-    <div class="bar"><div class="barFill" id="bar"></div></div>
-    <p style="margin-top:10px">HACK PROGRESS : LOADING…</p>
+    <div class="progress">
+      <div class="bar" id="bar"></div>
+    </div>
   </div>
 </div>
 
 <!-- FINAL -->
-<div id="final">
-  <div class="card">
-    <h1>Je t’aime ❤️</h1>
-    <p>Joyeuse Saint Chaimaa Beauté !! 💝</p>
-  </div>
+<div class="final" id="final">
+  <h1>Je t’aime ❤️</h1>
+  <p>Joyeuse Saint Chaimaa Beauté !!</p>
 </div>
 
 <script>
-/* ===== RÉFÉRENCES ===== */
-const start = document.getElementById("start");
-const letter = document.getElementById("letter");
-const hack = document.getElementById("hack");
-const final = document.getElementById("final");
-const hackMain = document.getElementById("hackMain");
-const bar = document.getElementById("bar");
-const yesBtn = document.getElementById("yes");
-const noBtn = document.getElementById("no");
-const env = document.getElementById("env");
-const proposalText = document.getElementById("proposalText");
-
-/* ===== MESSAGES ===== */
-const proposalMessages = [
+let step = 0;
+const messages = [
   "Veux-tu être ma future femme ?",
-  "T’es sûre ? 🤗",
-  "Re-réfléchis… 🫣"
+  "T’es sûre 🤗",
+  "Réfléchis bien 🫣"
 ];
 
-const hackMessages = [
+const hacks = [
   "TRÈS BIEN",
   "JE VAIS TE HACKER",
   "MAINTENANT",
   "C’EST TANT PIS POUR TOI",
   "⚠️ HACK EN COURS ⚠️",
   "SYSTÈME COMPROMIS",
-  "TRÈS BIEN",
   "SYSTÈME HS",
   "ERREUR SYSTÈME"
 ];
 
-let proposalStep = 0;
+function openLetter() {
+  start.style.display="none";
+  letter.style.display="block";
+}
 
-/* ===== LOGIQUE ===== */
-env.onclick = () => {
-  start.style.display = "none";
-  letter.style.display = "block";
-};
-
-noBtn.onmouseover = () => {
-  noBtn.style.transform =
-    `translate(${Math.random()*120}px,${Math.random()*40}px)`;
-};
-
-yesBtn.onclick = () => {
-  proposalStep++;
-  if (proposalStep < proposalMessages.length) {
-    proposalText.innerText = proposalMessages[proposalStep];
+function yesClick() {
+  step++;
+  if(step < messages.length){
+    message.innerText = messages[step];
   } else {
-    letter.style.display = "none";
+    letter.style.display="none";
     startHack();
   }
-};
+}
+
+function moveNo(){
+  no.style.transform=`translate(${Math.random()*120}px,${Math.random()*40}px)`;
+}
 
 function startHack(){
-  hack.style.display = "flex";
-  let i = 0;
-  const interval = setInterval(()=>{
-    hackMain.innerText = hackMessages[i];
-    bar.style.width = ((i+1)/hackMessages.length*100)+"%";
+  hack.style.display="flex";
+  let i=0;
+  const interval=setInterval(()=>{
+    hackText.innerText=hacks[i];
+    bar.style.width=((i+1)/hacks.length*100)+"%";
     i++;
-    if(i === hackMessages.length){
+    if(i>=hacks.length){
       clearInterval(interval);
       setTimeout(showFinal,800);
     }
-  }, 900);
+  },700);
 }
 
 function showFinal(){
-  hack.style.display = "none";
-  final.style.display = "flex";
-  for(let i=0;i<40;i++){
-    spawn("💖","heart");
+  hack.style.display="none";
+  final.style.display="block";
+  for(let i=0;i<80;i++){
+    spawn("💗","heart");
     spawn("🎉","confetti");
   }
 }
 
-function spawn(txt,cls){
+function spawn(symbol,cls){
   const e=document.createElement("div");
   e.className=cls;
-  e.innerText=txt;
+  e.innerText=symbol;
   e.style.left=Math.random()*100+"vw";
-  e.style.fontSize=14+Math.random()*20+"px";
-  e.style.animationDuration=3+Math.random()*2+"s";
+  e.style.fontSize=20+Math.random()*20+"px";
   document.body.appendChild(e);
   setTimeout(()=>e.remove(),5000);
 }
