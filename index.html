@@ -6,24 +6,15 @@
 <title>Pour Chaimaa ❤️</title>
 
 <style>
-/* ===== FOND ROMANTIQUE ANIMÉ ===== */
 body{
   margin:0;
   height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
-  background:linear-gradient(270deg,#ff9acb,#ff5fa2,#ff9acb);
-  background-size:600% 600%;
-  animation:bgMove 12s ease infinite;
+  background:linear-gradient(135deg,#ff9acb,#ff5fa2);
   font-family:Arial,sans-serif;
   overflow:hidden;
-}
-
-@keyframes bgMove{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
 }
 
 /* ===== CARTES ===== */
@@ -68,6 +59,19 @@ button{
   background:black;
   color:red;
   border:4px solid red;
+  animation:blink .15s infinite alternate;
+}
+@keyframes blink{
+  from{transform:scale(1);}
+  to{transform:scale(1.06);}
+}
+.hackBox{animation:shake .12s infinite;}
+@keyframes shake{
+  0%{transform:translate(0,0);}
+  25%{transform:translate(4px,-4px);}
+  50%{transform:translate(-4px,4px);}
+  75%{transform:translate(4px,4px);}
+  100%{transform:translate(0,0);}
 }
 .progress{
   width:100%;
@@ -83,6 +87,17 @@ button{
   background:red;
   transition:width .7s linear;
 }
+.hackProgressText{
+  margin-top:10px;
+  font-size:13px;
+  font-weight:bold;
+  color:red;
+  animation:flash .6s infinite;
+}
+@keyframes flash{
+  0%,100%{opacity:1;}
+  50%{opacity:0;}
+}
 
 /* ===== ENVELOPPE FINALE ===== */
 #finalEnvelope{
@@ -94,17 +109,10 @@ button{
 .envelopeBox{
   width:260px;
   height:170px;
+  position:relative;
   background:#fff;
   border-radius:14px;
-  position:relative;
   overflow:hidden;
-  cursor:pointer;
-  animation:pulse 1.6s infinite;
-}
-
-@keyframes pulse{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.04)}
 }
 
 .flap{
@@ -116,11 +124,7 @@ button{
   background:#ff5fa2;
   clip-path:polygon(0 0,100% 0,50% 55%);
   transform-origin:top;
-  transition:transform 1s ease;
-}
-
-.envelopeBox.open .flap{
-  transform:rotateX(180deg);
+  animation:openFlap 1.2s ease forwards;
 }
 
 .letter{
@@ -131,40 +135,40 @@ button{
   background:#ffd6e8;
   text-align:center;
   padding-top:35px;
-  transition:bottom 1s ease;
+  animation:letterUp 1.2s ease forwards;
+  animation-delay:1s;
 }
 
-.envelopeBox.open .letter{
-  bottom:0;
+@keyframes openFlap{
+  to{transform:rotateX(180deg)}
+}
+@keyframes letterUp{
+  to{bottom:0}
 }
 
-.letter h1{
-  color:#ff4081;
-  font-size:30px;
-  min-height:40px;
-}
+.letter h1{color:#ff4081;font-size:30px}
+.letter p{color:#ff4081;font-size:18px}
 
-.letter p{
-  color:#ff4081;
-  font-size:18px;
-  opacity:0;
-  transition:opacity 1s ease;
-}
-
-.envelopeBox.open .letter p{
-  opacity:1;
-}
-
-/* ===== CŒURS FOND ===== */
-.bgHeart{
+/* ===== CŒURS ===== */
+.heart{
   position:absolute;
-  opacity:.25;
-  animation:floatHeart 8s linear forwards;
+  animation:heartFloat 5s ease-out forwards;
 }
-@keyframes floatHeart{
-  from{transform:translateY(100vh) scale(.6);opacity:0}
-  20%{opacity:.4}
-  to{transform:translateY(-20vh) scale(1);opacity:0}
+@keyframes heartFloat{
+  0%{transform:translateY(20px) scale(.5);opacity:0}
+  20%{opacity:.6}
+  80%{opacity:.6}
+  100%{transform:translateY(-60px) scale(1);opacity:0}
+}
+
+/* ===== CONFETTIS ===== */
+.confetti{
+  position:absolute;
+  animation:confettiSpin 6s linear forwards;
+}
+@keyframes confettiSpin{
+  from{transform:rotate(0deg);opacity:1}
+  to{transform:rotate(360deg);opacity:0}
 }
 </style>
 </head>
@@ -187,18 +191,21 @@ button{
 
 <!-- HACK -->
 <div class="card" id="hack">
-  <h2 id="hackTop">HACK EN COURS</h2>
-  <div class="progress"><div class="bar" id="bar"></div></div>
+  <div class="hackBox">
+    <h2 id="hackTop">TRÈS BIEN</h2>
+    <p>JE VAIS TE HACKER MAINTENANT ⚠️</p>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="hackProgressText">HACK PROGRESS…</div>
+  </div>
 </div>
 
 <!-- ENVELOPPE FINALE -->
 <div class="card" id="finalEnvelope">
-  <p>Clique pour ouvrir 💌</p>
-  <div class="envelopeBox" id="envBox" onclick="openFinalLetter()">
+  <div class="envelopeBox">
     <div class="flap"></div>
     <div class="letter">
-      <h1 id="typeText"></h1>
-      <p id="finalSub">Joyeuse Saint Chaimaa Beauté 💖</p>
+      <h1>Je t’aime ❤️</h1>
+      <p>Joyeuse Saint Chaimaa Beauté 💖</p>
     </div>
   </div>
 </div>
@@ -209,13 +216,12 @@ const questions=[
   "Réfléchis bien… 😘",
   "T’es sûre ? 🤍"
 ];
-const hackMsgs=["INITIALISATION","HACK EN COURS","ACCÈS TOTAL","TERMINÉ"];
+const hackMsgs=[
+  "TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","ERREUR","TERMINÉ"
+];
 let q=0,h=0;
 
-window.onload=()=>{
-  intro.style.display="block";
-  setInterval(spawnBgHeart,500);
-}
+window.onload=()=>intro.style.display="block";
 
 function openLetter(){
   intro.style.display="none";
@@ -240,43 +246,38 @@ function startHack(){
     h++;
     if(h>=hackMsgs.length){
       clearInterval(i);
-      setTimeout(()=>{
-        hack.style.display="none";
-        finalEnvelope.style.display="block";
-      },800);
+      setTimeout(showFinal,1000);
     }
   },900);
 }
 
-/* ===== OUVERTURE ENVELOPPE + TEXTE ===== */
-function openFinalLetter(){
-  const box=document.getElementById("envBox");
-  if(box.classList.contains("open")) return;
-  box.classList.add("open");
-  typeWriter("Je t’aime ❤️", "typeText", 120);
+function showFinal(){
+  hack.style.display="none";
+  finalEnvelope.style.display="block";
+  setInterval(spawnHeart,350);
+  setInterval(spawnConfetti,300);
 }
 
-/* ===== EFFET MACHINE À ÉCRIRE ===== */
-function typeWriter(text,id,speed){
-  let i=0;
-  const el=document.getElementById(id);
-  el.innerHTML="";
-  const interval=setInterval(()=>{
-    el.innerHTML+=text.charAt(i);
-    i++;
-    if(i>=text.length) clearInterval(interval);
-  },speed);
-}
-
-/* ===== CŒURS FOND ===== */
-function spawnBgHeart(){
+function spawnHeart(){
   const h=document.createElement("div");
-  h.className="bgHeart";
+  h.className="heart";
   h.innerHTML="❤️";
-  h.style.left=Math.random()*100+"vw";
-  h.style.fontSize=16+Math.random()*30+"px";
+  h.style.left=Math.random()*80+"%";
+  h.style.top=Math.random()*80+"%";
+  h.style.fontSize=18+Math.random()*20+"px";
   document.body.appendChild(h);
-  setTimeout(()=>h.remove(),8000);
+  setTimeout(()=>h.remove(),5000);
+}
+
+function spawnConfetti(){
+  const c=document.createElement("div");
+  c.className="confetti";
+  c.innerHTML="❤️";
+  c.style.left=Math.random()*100+"vw";
+  c.style.top=Math.random()*100+"vh";
+  c.style.fontSize=14+Math.random()*20+"px";
+  document.body.appendChild(c);
+  setTimeout(()=>c.remove(),6000);
 }
 
 function moveNo(){
