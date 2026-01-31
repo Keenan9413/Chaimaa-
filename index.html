@@ -119,12 +119,12 @@ button{
 
 .heart, .confetti{
   position:absolute;
-  animation:float 2.2s ease-out forwards;
+  animation:burst 1.8s ease-out forwards;
 }
 
-@keyframes float{
+@keyframes burst{
   0%{transform:scale(0);opacity:1;}
-  100%{transform:scale(1.4) translateY(-60px);opacity:0;}
+  100%{transform:scale(1.4) translateY(-40px);opacity:0;}
 }
 </style>
 </head>
@@ -179,7 +179,6 @@ const hackMsgs=[
 ];
 
 let qStep=0, hStep=0;
-let heartInterval, confettiInterval;
 
 window.onload=()=>intro.style.display="block";
 
@@ -228,14 +227,12 @@ function spawnAlerts(){
 function showFinal(){
   hack.style.display="none";
   final.style.display="block";
-  startHearts();
-  startConfetti();
+  burstHearts();
+  burstConfetti();
 }
 
-/* ===== INFINITE EFFECTS ===== */
-
-function startHearts(){
-  heartInterval=setInterval(()=>{
+function burstHearts(){
+  for(let i=0;i<30;i++){
     const h=document.createElement("div");
     h.className="heart";
     h.innerHTML="❤️";
@@ -243,12 +240,12 @@ function startHearts(){
     h.style.top=Math.random()*70+"%";
     h.style.fontSize=16+Math.random()*22+"px";
     final.appendChild(h);
-    setTimeout(()=>h.remove(),2200);
-  },200);
+    setTimeout(()=>h.remove(),1800);
+  }
 }
 
-function startConfetti(){
-  confettiInterval=setInterval(()=>{
+function burstConfetti(){
+  for(let i=0;i<40;i++){
     const c=document.createElement("div");
     c.className="confetti";
     c.innerHTML="🎉";
@@ -256,8 +253,8 @@ function startConfetti(){
     c.style.top=Math.random()*100+"vh";
     c.style.fontSize=14+Math.random()*20+"px";
     document.body.appendChild(c);
-    setTimeout(()=>c.remove(),2200);
-  },180);
+    setTimeout(()=>c.remove(),1800);
+  }
 }
 
 function moveNo(){
