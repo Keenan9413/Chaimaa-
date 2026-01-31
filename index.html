@@ -6,7 +6,6 @@
 <title>Pour Chaimaa ❤️</title>
 
 <style>
-/* ===== FOND ROMANTIQUE ANIMÉ ===== */
 body{
   margin:0;
   height:100vh;
@@ -84,13 +83,6 @@ button{
 }
 
 /* ===== ENVELOPPE FINALE ===== */
-#finalEnvelope{
-  background:none;
-  box-shadow:none;
-  justify-content:center;
-  align-items:center;
-}
-
 .envelopeBox{
   width:260px;
   height:170px;
@@ -147,7 +139,7 @@ button{
   transition:opacity 1s ease;
 }
 
-/* ===== CŒURS FOND ===== */
+/* ===== CŒURS ===== */
 .bgHeart{
   position:absolute;
   opacity:.25;
@@ -164,7 +156,7 @@ button{
 <body>
 
 <!-- INTRO -->
-<div class="card" id="intro">
+<div class="card" id="intro" style="display:block">
   <h1>Pour Chaimaa ❤️</h1>
   <p>Clique sur l’enveloppe</p>
   <img src="IMG_5431.jpeg" class="envelopeIntro" onclick="openLetter()">
@@ -183,8 +175,8 @@ button{
   <div class="progress"><div class="bar" id="bar"></div></div>
 </div>
 
-<!-- ENVELOPPE FINALE -->
-<div class="card" id="finalEnvelope">
+<!-- ENVELOPPE FINALE (FORCÉE CACHÉE) -->
+<div class="card" id="finalEnvelope" style="display:none">
   <p>Clique pour ouvrir 💌</p>
   <div class="envelopeBox" id="envBox" onclick="openFinalLetter()">
     <div class="flap"></div>
@@ -204,10 +196,7 @@ const questions=[
 const hackMsgs=["INITIALISATION","HACK EN COURS","ACCÈS TOTAL","TERMINÉ"];
 let q=0,h=0;
 
-window.onload=()=>{
-  intro.style.display="block";
-  setInterval(spawnBgHeart,500);
-};
+setInterval(spawnBgHeart,600);
 
 function openLetter(){
   intro.style.display="none";
@@ -234,7 +223,7 @@ function startHack(){
       clearInterval(i);
       setTimeout(()=>{
         hack.style.display="none";
-        finalEnvelope.style.display="flex";
+        finalEnvelope.style.display="block";
       },800);
     }
   },900);
