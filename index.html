@@ -3,113 +3,96 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pour toi ❤️</title>
+<title>Pour Chaimaa ❤️</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #ff9acb, #ff6fae);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  overflow: hidden;
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#ff9acb,#ff5fa2);
+  font-family:Arial,sans-serif;
+  overflow:hidden;
 }
 
-.card {
-  background: #ffd6e8;
-  padding: 25px;
-  border-radius: 20px;
-  text-align: center;
-  width: 90%;
-  max-width: 360px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.3);
-  display: none;
-  position: relative;
-  overflow: hidden;
+.card{
+  display:none;
+  background:#ffd6e8;
+  padding:25px;
+  border-radius:20px;
+  width:90%;
+  max-width:360px;
+  text-align:center;
+  box-shadow:0 10px 30px rgba(0,0,0,.3);
+  position:relative;
+  overflow:hidden;
 }
 
-h1 { color: #c4005f; }
-
-button {
-  padding: 12px 22px;
-  margin: 10px;
-  border: none;
-  border-radius: 25px;
-  font-size: 16px;
-  cursor: pointer;
+button{
+  padding:12px 22px;
+  border:none;
+  border-radius:25px;
+  font-size:16px;
+  margin:10px;
+  cursor:pointer;
 }
 
-#yes { background:#ff4081; color:white; }
-#no { background:#ccc; }
+#yes{background:#ff4081;color:white;}
+#no{background:#ccc;}
 
-.envelope {
-  width: 200px;
-  cursor: pointer;
-  margin-top: 15px;
+.envelope{
+  width:200px;
+  cursor:pointer;
 }
 
 /* HACK */
-#hack {
-  background: black;
-  color: red;
-  border: 4px solid red;
+#hack{
+  background:black;
+  color:red;
+  border:4px solid red;
 }
 
-.hack-title {
-  font-size: 26px;
-  font-weight: bold;
-  margin-bottom: 10px;
+.hackTop{
+  font-size:26px;
+  font-weight:bold;
+  margin-bottom:10px;
 }
 
-.hack-main {
-  font-size: 16px;
-  font-weight: bold;
+.hackFixed{
+  font-size:15px;
+  font-weight:bold;
 }
 
-.progress {
-  width: 100%;
-  height: 14px;
-  background: #333;
-  border-radius: 10px;
-  margin-top: 15px;
-  overflow: hidden;
+.progress{
+  width:100%;
+  height:14px;
+  background:#333;
+  border-radius:10px;
+  margin-top:15px;
+  overflow:hidden;
 }
 
-.progress-bar {
-  height: 100%;
-  width: 0%;
-  background: red;
-  transition: width .6s linear;
+.bar{
+  height:100%;
+  width:0%;
+  background:red;
+  transition:width .6s linear;
 }
 
 /* FINAL */
-#final h1 {
-  font-size: 32px;
-  color: #ff4081;
+#final h1{color:#ff4081;font-size:32px;}
+#final p{color:#ff4081;font-size:18px;}
+
+.heart{
+  position:absolute;
+  animation:burst 1.6s ease-out forwards;
 }
 
-#final p {
-  font-size: 18px;
-  color: #ff4081;
-}
-
-/* COEURS BURST */
-.heart {
-  position: absolute;
-  animation: pop 1.8s ease-out forwards;
-}
-
-@keyframes pop {
-  0% {
-    transform: scale(0) translateY(0);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.2) translateY(-40px);
-    opacity: 0;
-  }
+@keyframes burst{
+  0%{transform:scale(0);opacity:1;}
+  100%{transform:scale(1.2) translateY(-40px);opacity:0;}
 }
 </style>
 </head>
@@ -123,87 +106,101 @@ button {
 </div>
 
 <div class="card" id="question">
-  <h1>Veux-tu être ma future femme ? 💍</h1>
-  <button id="yes" onclick="startHack()">Oui</button>
-  <button id="no" onclick="alert('Réfléchis encore 😌')">Non</button>
+  <h1 id="qText">Veux-tu être ma future femme ? 💍</h1>
+  <button id="yes" onclick="nextQuestion()">Oui ❤️</button>
+  <button id="no" onmouseover="moveNo()">Non 😔</button>
 </div>
 
 <div class="card" id="hack">
-  <div class="hack-title" id="hackTop">⚠️ HACK EN COURS ⚠️</div>
-  <div class="hack-main">
+  <div class="hackTop" id="hackTop">TRÈS BIEN</div>
+  <div class="hackFixed">
     TRÈS BIEN JE VAIS TE HACKER MAINTENANT<br>
     C’EST TANT PIS POUR TOI ⚠️
   </div>
-
   <div class="progress">
-    <div class="progress-bar" id="bar"></div>
+    <div class="bar" id="bar"></div>
   </div>
 </div>
 
 <div class="card" id="final">
   <h1>Je t’aime ❤️</h1>
-  <p>Joyeuse Saint Chaimaa Beauté !! 💖</p>
+  <p> Joyeuse Saint Chaimaa Beauté !! 💖</p>
 </div>
 
 <script>
-const hackMessages = [
+const questions=[
+  "Veux-tu être ma future femme ? 💍",
+  "T’es sûre ? 🤍",
+  "Réfléchis bien… 🫣"
+];
+
+const hackMsgs=[
   "TRÈS BIEN",
   "JE VAIS TE HACKER",
   "MAINTENANT",
-  "C’EST TANT PIS POUR TOI",
   "⚠️ HACK EN COURS ⚠️",
   "SYSTÈME COMPROMIS",
-  "TRÈS BIEN",
   "SYSTÈME HS",
   "ERREUR SYSTÈME"
 ];
 
-let step = 0;
+let qStep=0;
+let hStep=0;
 
-window.onload = () => {
-  intro.style.display = "block";
-};
+window.onload=()=>intro.style.display="block";
 
-function openLetter() {
-  intro.style.display = "none";
-  question.style.display = "block";
+function openLetter(){
+  intro.style.display="none";
+  question.style.display="block";
 }
 
-function startHack() {
-  question.style.display = "none";
-  hack.style.display = "block";
+function nextQuestion(){
+  qStep++;
+  if(qStep<questions.length){
+    qText.innerText=questions[qStep];
+  }else{
+    question.style.display="none";
+    startHack();
+  }
+}
 
-  const interval = setInterval(() => {
-    hackTop.innerText = hackMessages[step];
-    bar.style.width = ((step+1)/hackMessages.length)*100 + "%";
-    step++;
-
-    if (step >= hackMessages.length) {
+function startHack(){
+  hack.style.display="block";
+  const interval=setInterval(()=>{
+    hackTop.innerText=hackMsgs[hStep];
+    bar.style.width=((hStep+1)/hackMsgs.length)*100+"%";
+    hStep++;
+    if(hStep>=hackMsgs.length){
       clearInterval(interval);
-      setTimeout(showFinal, 700);
+      setTimeout(showFinal,700);
     }
-  }, 850);
+  },900);
 }
 
-function showFinal() {
-  hack.style.display = "none";
-  final.style.display = "block";
+function showFinal(){
+  hack.style.display="none";
+  final.style.display="block";
   burstHearts();
 }
 
-function burstHearts() {
-  for (let i = 0; i < 30; i++) {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.innerHTML = "❤️";
-    heart.style.left = Math.random() * 80 + "%";
-    heart.style.top = Math.random() * 70 + "%";
-    heart.style.fontSize = (16 + Math.random() * 20) + "px";
-    final.appendChild(heart);
-    setTimeout(() => heart.remove(), 1800);
+function burstHearts(){
+  for(let i=0;i<35;i++){
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="❤️";
+    h.style.left=Math.random()*80+"%";
+    h.style.top=Math.random()*70+"%";
+    h.style.fontSize=16+Math.random()*22+"px";
+    final.appendChild(h);
+    setTimeout(()=>h.remove(),1600);
   }
+}
+
+function moveNo(){
+  no.style.transform=`translate(${Math.random()*120-60}px,${Math.random()*60-30}px)`;
 }
 </script>
 
 </body>
 </html>
+
