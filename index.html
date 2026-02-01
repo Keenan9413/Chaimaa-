@@ -54,7 +54,35 @@ button{
 #yes{background:#ff4081;color:white;}
 #no{background:#ccc;position:absolute}
 
-/* ===== HACK (COMME AVANT) ===== */
+/* ===== QUESTION EFFECT ===== */
+.questionEffect{
+  position:absolute;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:48px;
+  animation:fadeIn .6s ease forwards;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:scale(.7)}
+  to{opacity:1;transform:scale(1)}
+}
+
+.qEmoji{
+  position:absolute;
+  animation:qFloat 3.5s ease-out forwards;
+  opacity:0;
+}
+
+@keyframes qFloat{
+  0%{transform:translateY(20px);opacity:0}
+  20%{opacity:1}
+  100%{transform:translateY(-80px);opacity:0}
+}
+
+/* ===== HACK ===== */
 #hack{
   background:black;
   color:red;
@@ -173,7 +201,7 @@ button{
   50%{transform:translateX(60px);}
 }
 
-/* ===== CŒURS PARTOUT ===== */
+/* ===== CŒURS ===== */
 .heart{
   position:absolute;
   animation:floatHeart 6s linear forwards;
@@ -252,14 +280,45 @@ function openIntro(){
 }
 
 function nextQuestion(){
-  q++;
   navigator.vibrate?.(60);
-  if(q<questions.length){
-    qText.innerText=questions[q];
-  }else{
-    question.style.display="none";
-    startHack();
-  }
+
+  const emoji = questions[q].match(/[\p{Emoji}]/gu)?.join("") || "❤️";
+
+  qText.style.display="none";
+  yes.style.display="none";
+  no.style.display="none";
+
+  const effect=document.createElement("div");
+  effect.className="questionEffect";
+  effect.innerHTML=emoji;
+  question.appendChild(effect);
+
+  const interval=setInterval(()=>{
+    const e=document.createElement("div");
+    e.className="qEmoji";
+    e.innerHTML=emoji;
+    e.style.left=Math.random()*80+"%";
+    e.style.bottom="20px";
+    e.style.fontSize=20+Math.random()*25+"px";
+    question.appendChild(e);
+    setTimeout(()=>e.remove(),3500);
+  },250);
+
+  setTimeout(()=>{
+    clearInterval(interval);
+    effect.remove();
+
+    q++;
+    if(q<questions.length){
+      qText.innerText=questions[q];
+      qText.style.display="block";
+      yes.style.display="inline-block";
+      no.style.display="inline-block";
+    }else{
+      question.style.display="none";
+      startHack();
+    }
+  },2200);
 }
 
 function startHack(){
