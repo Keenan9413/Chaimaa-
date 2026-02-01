@@ -28,6 +28,8 @@ body{
   text-align:center;
   box-shadow:0 10px 30px rgba(0,0,0,.3);
   position:relative;
+  z-index:5;
+  overflow:hidden;
 }
 
 /* ===== INTRO ===== */
@@ -53,17 +55,29 @@ button{
 #yes{background:#ff4081;color:white;}
 #no{background:#ccc;position:absolute}
 
-/* ===== EMOJI SOUS QUESTION ===== */
-.emojiUnder{
-  font-size:48px;
-  margin-top:10px;
-  animation:emojiPop 1.2s ease forwards;
+/* ===== EMOJI QUESTION ===== */
+.centerEmoji{
+  position:absolute;
+  font-size:56px;
+  animation:pop 1s ease forwards;
+  pointer-events:none;
+}
+@keyframes pop{
+  0%{transform:scale(.3);opacity:0}
+  50%{transform:scale(1.2);opacity:1}
+  100%{transform:scale(1);opacity:0}
 }
 
-@keyframes emojiPop{
-  0%{transform:scale(0);opacity:0}
-  40%{transform:scale(1.3);opacity:1}
-  100%{transform:scale(1);opacity:0}
+.qFloat{
+  position:absolute;
+  animation:floatQ 3s ease-out forwards;
+  opacity:0;
+  pointer-events:none;
+}
+@keyframes floatQ{
+  0%{transform:translateY(20px);opacity:0}
+  20%{opacity:1}
+  100%{transform:translateY(-80px);opacity:0}
 }
 
 /* ===== HACK ===== */
@@ -112,12 +126,28 @@ button{
 
 /* ===== ENVELOPPE FINALE ===== */
 #finalEnvelope{
+  background:none;
+  box-shadow:none;
   display:none;
   justify-content:center;
+  align-items:center;
 }
 .finalEnvelope{
-  font-size:48px;
+  width:220px;
+  height:140px;
+  background:#fff;
+  border-radius:16px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
   cursor:pointer;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+  font-size:46px;
+  animation:pulse 1.6s infinite;
+}
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.05)}
 }
 </style>
 </head>
@@ -132,7 +162,6 @@ button{
 
 <div class="card" id="question">
   <h1 id="qText">Veux-tu être ma future femme ? 💍</h1>
-  <div id="emojiZone"></div>
   <button id="yes" onclick="nextQuestion()">Oui ❤️</button>
   <button id="no" onmouseover="moveNo()">Non 💔</button>
 </div>
@@ -163,7 +192,6 @@ const hackMsgs=[
   "ERREUR SYSTÈME",
   "TERMINÉ"
 ];
-
 let q=0,h=0;
 
 window.onload=()=>intro.style.display="block";
@@ -174,20 +202,40 @@ function openIntro(){
 }
 
 function nextQuestion(){
-  const emoji = questions[q].match(/[\p{Emoji}]/gu)?.join("") || "❤️";
+  const emoji=questions[q].match(/[\p{Emoji}]/gu)?.join("")||"❤️";
 
-  emojiZone.innerHTML=`<div class="emojiUnder">${emoji}</div>`;
+  // emoji central
+  const center=document.createElement("div");
+  center.className="centerEmoji";
+  center.innerHTML=emoji;
+  center.style.top="50%";
+  center.style.left="50%";
+  center.style.transform="translate(-50%,-50%)";
+  question.appendChild(center);
+  setTimeout(()=>center.remove(),1000);
+
+  // emojis flottants
+  const interval=setInterval(()=>{
+    const e=document.createElement("div");
+    e.className="qFloat";
+    e.innerHTML=emoji;
+    e.style.left=Math.random()*80+"%";
+    e.style.bottom="10px";
+    e.style.fontSize=18+Math.random()*22+"px";
+    question.appendChild(e);
+    setTimeout(()=>e.remove(),3000);
+  },200);
 
   setTimeout(()=>{
-    emojiZone.innerHTML="";
+    clearInterval(interval);
     q++;
-    if(q < questions.length){
-      qText.innerText = questions[q];
+    if(q<questions.length){
+      qText.innerText=questions[q];
     }else{
       question.style.display="none";
       startHack();
     }
-  },1200);
+  },1500);
 }
 
 function startHack(){
