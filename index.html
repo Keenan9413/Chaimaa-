@@ -17,7 +17,7 @@ body{
   overflow:hidden;
 }
 
-/* CARTES */
+/* ===== CARTES ===== */
 .card{
   display:none;
   background:#ffd6e8;
@@ -29,9 +29,10 @@ body{
   box-shadow:0 10px 30px rgba(0,0,0,.3);
   position:relative;
   z-index:5;
+  overflow:hidden;
 }
 
-/* INTRO */
+/* ===== INTRO ===== */
 .envelopeIntro{
   width:200px;
   cursor:pointer;
@@ -42,7 +43,7 @@ body{
   50%{transform:translateY(-10px);}
 }
 
-/* BOUTONS */
+/* ===== BOUTONS ===== */
 button{
   padding:12px 22px;
   border:none;
@@ -54,7 +55,7 @@ button{
 #yes{background:#ff4081;color:white;}
 #no{background:#ccc;position:absolute}
 
-/* HACK */
+/* ===== HACK ===== */
 #hack{
   background:black;
   color:red;
@@ -65,11 +66,20 @@ button{
   from{transform:scale(1);}
   to{transform:scale(1.06);}
 }
+.hackBox{animation:shake .12s infinite;}
+@keyframes shake{
+  0%{transform:translate(0,0);}
+  25%{transform:translate(4px,-4px);}
+  50%{transform:translate(-4px,4px);}
+  75%{transform:translate(4px,4px);}
+  100%{transform:translate(0,0);}
+}
 .progress{
   width:100%;
   height:14px;
   background:#330000;
   border-radius:10px;
+  margin-top:15px;
   overflow:hidden;
 }
 .bar{
@@ -78,8 +88,18 @@ button{
   background:red;
   transition:width .7s linear;
 }
+.hackProgressText{
+  margin-top:10px;
+  font-size:13px;
+  font-weight:bold;
+  animation:flash .6s infinite;
+}
+@keyframes flash{
+  0%,100%{opacity:1;}
+  50%{opacity:0;}
+}
 
-/* ENVELOPPE FINALE */
+/* ===== ENVELOPPE FINALE ===== */
 #finalEnvelope{
   background:none;
   box-shadow:none;
@@ -96,6 +116,7 @@ button{
   justify-content:center;
   align-items:center;
   cursor:pointer;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
   font-size:46px;
   animation:pulse 1.6s infinite;
 }
@@ -104,7 +125,7 @@ button{
   50%{transform:scale(1.05)}
 }
 
-/* CARTE FINALE */
+/* ===== CARTE FINALE ===== */
 .finalCard{
   background:#ffe4ef;
   border-radius:28px;
@@ -113,12 +134,13 @@ button{
   max-width:420px;
   text-align:center;
   box-shadow:0 20px 40px rgba(0,0,0,.25);
+  transform:scale(.6);
+  opacity:0;
   animation:zoomIn 1s ease forwards;
   position:relative;
   z-index:5;
 }
 @keyframes zoomIn{
-  from{transform:scale(.6);opacity:0;}
   to{transform:scale(1);opacity:1;}
 }
 .finalCard h1{
@@ -133,25 +155,41 @@ button{
   transition:opacity 1s ease;
 }
 
-/* COEURS */
+/* ===== VAGUE ===== */
+.wave{
+  position:absolute;
+  width:200%;
+  height:200px;
+  background:rgba(255,105,180,.35);
+  bottom:-80px;
+  left:-50%;
+  border-radius:50%;
+  animation:waveMove 6s ease-in-out infinite;
+  z-index:1;
+}
+@keyframes waveMove{
+  0%,100%{transform:translateX(0);}
+  50%{transform:translateX(60px);}
+}
+
+/* ===== COEURS ===== */
 .heart{
   position:absolute;
   animation:floatHeart 6s linear forwards;
-  z-index:2;
+  opacity:.8;
 }
 @keyframes floatHeart{
   from{transform:translateY(40px) scale(.6);opacity:0}
-  20%{opacity:.9}
+  20%{opacity:.8}
   to{transform:translateY(-120px) scale(1);opacity:0}
 }
-
 .innerHeart{
   position:absolute;
   animation:innerFloat 4s ease-out forwards;
 }
 @keyframes innerFloat{
   from{transform:translateY(10px);opacity:0}
-  to{transform:translateY(-60px);opacity:0}
+  to{transform:translateY(-50px);opacity:0}
 }
 </style>
 </head>
@@ -171,8 +209,12 @@ button{
 </div>
 
 <div class="card" id="hack">
-  <h2 id="hackTop">TRÈS BIEN</h2>
-  <div class="progress"><div class="bar" id="bar"></div></div>
+  <div class="hackBox">
+    <h2 id="hackTop">TRÈS BIEN</h2>
+    <p>JE VAIS TE HACKER MAINTENANT ⚠️</p>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="hackProgressText">HACK PROGRESS…</div>
+  </div>
 </div>
 
 <div class="card" id="finalEnvelope">
@@ -185,7 +227,14 @@ const questions=[
   "Réfléchis bien… 😘",
   "T’es sûre ? 🤍"
 ];
-const hackMsgs=["TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","TERMINÉ"];
+const hackMsgs=[
+  "TRÈS BIEN",
+  "HACK EN COURS",
+  "SYSTÈME COMPROMIS",
+  "ERREUR SYSTÈME",
+  "TERMINÉ"
+];
+
 let q=0,h=0;
 let heartInterval, innerHeartInterval;
 
@@ -224,14 +273,16 @@ function startHack(){
 
 function openFinal(){
   finalEnvelope.innerHTML=`
+    <div class="wave"></div>
     <div class="finalCard">
       <h1 id="typeText"></h1>
       <p id="subText">Joyeuse Saint Chaimaa Beauté 💖</p>
     </div>`;
 
-  // ❤️ CŒURS LANCÉS ICI (COMME TON CODE QUI MARCHE)
-  heartInterval=setInterval(spawnHeart,250);
-  innerHeartInterval=setInterval(spawnInnerHeart,400);
+  setTimeout(()=>{
+    heartInterval=setInterval(spawnHeart,250);
+    innerHeartInterval=setInterval(spawnInnerHeart,400);
+  },100);
 
   typeWriter("Je t’aime ❤️","typeText",120,()=>{
     document.getElementById("subText").style.opacity=1;
@@ -256,7 +307,7 @@ function spawnHeart(){
   h.className="heart";
   h.innerHTML="❤️";
   h.style.left=Math.random()*100+"vw";
-  h.style.top="100vh";
+  h.style.top=Math.random()*100+"vh";
   h.style.fontSize=16+Math.random()*26+"px";
   document.body.appendChild(h);
   setTimeout(()=>h.remove(),6000);
@@ -267,8 +318,8 @@ function spawnInnerHeart(){
   c.className="innerHeart";
   c.innerHTML="❤️";
   c.style.left=10+Math.random()*80+"%";
-  c.style.bottom="10px";
-  c.style.fontSize=12+Math.random()*16+"px";
+  c.style.bottom="15px";
+  c.style.fontSize=12+Math.random()*14+"px";
   document.querySelector(".finalCard")?.appendChild(c);
   setTimeout(()=>c.remove(),4000);
 }
