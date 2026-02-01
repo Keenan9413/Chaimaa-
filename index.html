@@ -29,9 +29,10 @@ body{
   box-shadow:0 10px 30px rgba(0,0,0,.3);
   position:relative;
   z-index:5;
+  overflow:hidden;
 }
 
-/* ===== INTRO ENVELOPPE ===== */
+/* ===== INTRO ===== */
 .envelopeIntro{
   width:200px;
   cursor:pointer;
@@ -54,29 +55,26 @@ button{
 #yes{background:#ff4081;color:white;}
 #no{background:#ccc;position:absolute}
 
-/* ===== QUESTION EFFECT ===== */
-.questionEffect{
+/* ===== EMOJI QUESTION ===== */
+.centerEmoji{
   position:absolute;
-  inset:0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:48px;
-  animation:fadeIn .6s ease forwards;
+  font-size:56px;
+  animation:pop 1s ease forwards;
+  pointer-events:none;
+}
+@keyframes pop{
+  0%{transform:scale(.3);opacity:0}
+  50%{transform:scale(1.2);opacity:1}
+  100%{transform:scale(1);opacity:0}
 }
 
-@keyframes fadeIn{
-  from{opacity:0;transform:scale(.7)}
-  to{opacity:1;transform:scale(1)}
-}
-
-.qEmoji{
+.qFloat{
   position:absolute;
-  animation:qFloat 3.5s ease-out forwards;
+  animation:floatQ 3s ease-out forwards;
   opacity:0;
+  pointer-events:none;
 }
-
-@keyframes qFloat{
+@keyframes floatQ{
   0%{transform:translateY(20px);opacity:0}
   20%{opacity:1}
   100%{transform:translateY(-80px);opacity:0}
@@ -134,7 +132,6 @@ button{
   justify-content:center;
   align-items:center;
 }
-
 .finalEnvelope{
   width:220px;
   height:140px;
@@ -152,95 +149,23 @@ button{
   0%,100%{transform:scale(1)}
   50%{transform:scale(1.05)}
 }
-
-/* ===== CARTE FINALE ===== */
-.finalCard{
-  background:#ffe4ef;
-  border-radius:28px;
-  padding:35px 25px;
-  width:90%;
-  max-width:420px;
-  text-align:center;
-  box-shadow:0 20px 40px rgba(0,0,0,.25);
-  transform:scale(.6);
-  opacity:0;
-  animation:zoomIn 1s ease forwards;
-  position:relative;
-  z-index:5;
-}
-@keyframes zoomIn{
-  to{transform:scale(1);opacity:1;}
-}
-
-.finalCard h1{
-  color:#ff3f87;
-  font-size:34px;
-  min-height:42px;
-}
-.finalCard p{
-  color:#ff3f87;
-  font-size:20px;
-  opacity:0;
-  transition:opacity 1s ease;
-}
-
-/* ===== VAGUE ===== */
-.wave{
-  position:absolute;
-  width:200%;
-  height:200px;
-  background:rgba(255,105,180,.35);
-  bottom:-80px;
-  left:-50%;
-  border-radius:50%;
-  animation:waveMove 6s ease-in-out infinite;
-  z-index:1;
-}
-@keyframes waveMove{
-  0%,100%{transform:translateX(0);}
-  50%{transform:translateX(60px);}
-}
-
-/* ===== CŒURS ===== */
-.heart{
-  position:absolute;
-  animation:floatHeart 6s linear forwards;
-  opacity:.8;
-}
-@keyframes floatHeart{
-  from{transform:translateY(40px) scale(.6);opacity:0}
-  20%{opacity:.8}
-  to{transform:translateY(-120px) scale(1);opacity:0}
-}
-
-.innerHeart{
-  position:absolute;
-  animation:innerFloat 4s ease-out forwards;
-}
-@keyframes innerFloat{
-  from{transform:translateY(10px);opacity:0}
-  to{transform:translateY(-50px);opacity:0}
-}
 </style>
 </head>
 
 <body>
 
-<!-- INTRO -->
 <div class="card" id="intro">
   <h1>Pour Chaimaa ❤️</h1>
   <p>Clique sur l’enveloppe</p>
   <img src="IMG_5431.jpeg" class="envelopeIntro" onclick="openIntro()">
 </div>
 
-<!-- QUESTION -->
 <div class="card" id="question">
   <h1 id="qText">Veux-tu être ma future femme ? 💍</h1>
   <button id="yes" onclick="nextQuestion()">Oui ❤️</button>
   <button id="no" onmouseover="moveNo()">Non 💔</button>
 </div>
 
-<!-- HACK -->
 <div class="card" id="hack">
   <div class="hackBox">
     <h2 id="hackTop">TRÈS BIEN</h2>
@@ -250,9 +175,8 @@ button{
   </div>
 </div>
 
-<!-- ENVELOPPE FINALE -->
 <div class="card" id="finalEnvelope">
-  <div class="finalEnvelope" onclick="openFinal()">💌</div>
+  <div class="finalEnvelope">💌</div>
 </div>
 
 <script>
@@ -270,9 +194,7 @@ const hackMsgs=[
 ];
 let q=0,h=0;
 
-window.onload=()=>{
-  intro.style.display="block";
-};
+window.onload=()=>intro.style.display="block";
 
 function openIntro(){
   intro.style.display="none";
@@ -280,45 +202,40 @@ function openIntro(){
 }
 
 function nextQuestion(){
-  navigator.vibrate?.(60);
+  const emoji=questions[q].match(/[\p{Emoji}]/gu)?.join("")||"❤️";
 
-  const emoji = questions[q].match(/[\p{Emoji}]/gu)?.join("") || "❤️";
+  // emoji central
+  const center=document.createElement("div");
+  center.className="centerEmoji";
+  center.innerHTML=emoji;
+  center.style.top="50%";
+  center.style.left="50%";
+  center.style.transform="translate(-50%,-50%)";
+  question.appendChild(center);
+  setTimeout(()=>center.remove(),1000);
 
-  qText.style.display="none";
-  yes.style.display="none";
-  no.style.display="none";
-
-  const effect=document.createElement("div");
-  effect.className="questionEffect";
-  effect.innerHTML=emoji;
-  question.appendChild(effect);
-
+  // emojis flottants
   const interval=setInterval(()=>{
     const e=document.createElement("div");
-    e.className="qEmoji";
+    e.className="qFloat";
     e.innerHTML=emoji;
     e.style.left=Math.random()*80+"%";
-    e.style.bottom="20px";
-    e.style.fontSize=20+Math.random()*25+"px";
+    e.style.bottom="10px";
+    e.style.fontSize=18+Math.random()*22+"px";
     question.appendChild(e);
-    setTimeout(()=>e.remove(),3500);
-  },250);
+    setTimeout(()=>e.remove(),3000);
+  },200);
 
   setTimeout(()=>{
     clearInterval(interval);
-    effect.remove();
-
     q++;
     if(q<questions.length){
       qText.innerText=questions[q];
-      qText.style.display="block";
-      yes.style.display="inline-block";
-      no.style.display="inline-block";
     }else{
       question.style.display="none";
       startHack();
     }
-  },2200);
+  },1500);
 }
 
 function startHack(){
@@ -326,7 +243,6 @@ function startHack(){
   const i=setInterval(()=>{
     hackTop.innerText=hackMsgs[h];
     bar.style.width=((h+1)/hackMsgs.length)*100+"%";
-    navigator.vibrate?.(40);
     h++;
     if(h>=hackMsgs.length){
       clearInterval(i);
@@ -336,56 +252,6 @@ function startHack(){
       },900);
     }
   },900);
-}
-
-function openFinal(){
-  finalEnvelope.innerHTML=`
-    <div class="wave"></div>
-    <div class="finalCard">
-      <h1 id="typeText"></h1>
-      <p id="subText">Joyeuse Saint Chaimaa Beauté 💖</p>
-    </div>`;
-  navigator.vibrate?.(120);
-  typeWriter("Je t’aime ❤️","typeText",120,()=>{
-    document.getElementById("subText").style.opacity=1;
-  });
-  setInterval(spawnHeart,250);
-  setInterval(spawnInnerHeart,400);
-}
-
-function typeWriter(text,id,speed,callback){
-  let i=0;
-  const el=document.getElementById(id);
-  el.innerHTML="";
-  const t=setInterval(()=>{
-    el.innerHTML+=text.charAt(i++);
-    if(i>=text.length){
-      clearInterval(t);
-      callback&&callback();
-    }
-  },speed);
-}
-
-function spawnHeart(){
-  const h=document.createElement("div");
-  h.className="heart";
-  h.innerHTML="❤️";
-  h.style.left=Math.random()*100+"vw";
-  h.style.top=Math.random()*100+"vh";
-  h.style.fontSize=16+Math.random()*26+"px";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),6000);
-}
-
-function spawnInnerHeart(){
-  const c=document.createElement("div");
-  c.className="innerHeart";
-  c.innerHTML="❤️";
-  c.style.left=10+Math.random()*80+"%";
-  c.style.bottom="15px";
-  c.style.fontSize=12+Math.random()*14+"px";
-  document.querySelector(".finalCard")?.appendChild(c);
-  setTimeout(()=>c.remove(),4000);
 }
 
 function moveNo(){
