@@ -29,6 +29,18 @@ body{
   box-shadow:0 10px 30px rgba(0,0,0,.3);
   position:relative;
   overflow:hidden;
+  z-index:5;
+}
+
+/* ===== INTRO ===== */
+.envelopeIntro{
+  width:200px;
+  cursor:pointer;
+  animation:bounce 1.4s infinite;
+}
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-10px);}
 }
 
 /* ===== BOUTONS ===== */
@@ -43,10 +55,10 @@ button{
 #yes{background:#ff4081;color:white;}
 #no{background:#ccc;position:absolute}
 
-/* ===== EMOJIS QUESTION ===== */
+/* ===== EMOJIS QUESTIONS ===== */
 .qEmoji{
   position:absolute;
-  animation:floatEmoji 2.5s ease-out forwards;
+  animation:floatEmoji 2.4s ease-out forwards;
   pointer-events:none;
 }
 @keyframes floatEmoji{
@@ -66,6 +78,14 @@ button{
   from{transform:scale(1);}
   to{transform:scale(1.06);}
 }
+.hackBox{animation:shake .12s infinite;}
+@keyframes shake{
+  0%{transform:translate(0,0);}
+  25%{transform:translate(4px,-4px);}
+  50%{transform:translate(-4px,4px);}
+  75%{transform:translate(4px,4px);}
+  100%{transform:translate(0,0);}
+}
 .progress{
   width:100%;
   height:14px;
@@ -79,6 +99,16 @@ button{
   width:0%;
   background:red;
   transition:width .7s linear;
+}
+.hackProgressText{
+  margin-top:10px;
+  font-size:13px;
+  font-weight:bold;
+  animation:flash .6s infinite;
+}
+@keyframes flash{
+  0%,100%{opacity:1;}
+  50%{opacity:0;}
 }
 
 /* ===== ENVELOPPE FINALE ===== */
@@ -98,6 +128,7 @@ button{
   justify-content:center;
   align-items:center;
   cursor:pointer;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
   font-size:46px;
   animation:pulse 1.6s infinite;
 }
@@ -105,63 +136,122 @@ button{
   0%,100%{transform:scale(1)}
   50%{transform:scale(1.05)}
 }
+
+/* ===== CŒURS FINAUX ===== */
+.heart{
+  position:absolute;
+  animation:floatHeart 6s linear forwards;
+  opacity:.8;
+}
+@keyframes floatHeart{
+  from{transform:translateY(40px) scale(.6);opacity:0}
+  20%{opacity:.8}
+  to{transform:translateY(-120px) scale(1);opacity:0}
+}
 </style>
 </head>
 
 <body>
 
+<!-- INTRO -->
+<div class="card" id="intro">
+  <h1>Pour Chaimaa ❤️</h1>
+  <p>Clique sur l’enveloppe</p>
+  <img src="IMG_5431.jpeg" class="envelopeIntro" onclick="openIntro()">
+</div>
+
+<!-- QUESTION -->
 <div class="card" id="question">
   <h1 id="qText">Veux-tu être ma future femme ? 💍</h1>
   <button id="yes" onclick="nextQuestion()">Oui ❤️</button>
   <button id="no" onmouseover="moveNo()">Non 💔</button>
 </div>
 
+<!-- HACK -->
 <div class="card" id="hack">
-  <h2 id="hackTop">TRÈS BIEN</h2>
-  <p>JE VAIS TE HACKER ⚠️</p>
-  <div class="progress"><div class="bar" id="bar"></div></div>
+  <div class="hackBox">
+    <h2 id="hackTop">TRÈS BIEN</h2>
+    <p>JE VAIS TE HACKER MAINTENANT ⚠️</p>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="hackProgressText">HACK PROGRESS…</div>
+  </div>
 </div>
 
+<!-- ENVELOPPE FINALE -->
 <div class="card" id="finalEnvelope">
-  <div class="finalEnvelope">💌</div>
+  <div class="finalEnvelope" onclick="openFinal()">💌</div>
 </div>
 
 <script>
-const questions = [
-  { text:"Veux-tu être ma future femme ?", emoji:"💍" },
-  { text:"Réfléchis bien…", emoji:"😘" },
-  { text:"T’es sûre ?", emoji:"🤍" }
+const questions=[
+  "Veux-tu être ma future femme ? 💍",
+  "Réfléchis bien… 😘",
+  "T’es sûre ? 🤍"
+];
+const hackMsgs=[
+  "TRÈS BIEN",
+  "HACK EN COURS",
+  "SYSTÈME COMPROMIS",
+  "ERREUR SYSTÈME",
+  "TERMINÉ"
 ];
 
-let q=0;
+let q=0,h=0;
 
-question.style.display="block";
+window.onload=()=>intro.style.display="block";
 
-function explodeEmojis(emoji){
-  for(let i=0;i<18;i++){
+function openIntro(){
+  intro.style.display="none";
+  question.style.display="block";
+}
+
+/* 🔥 EXPLOSION EMOJIS QUESTION */
+function explodeQuestionEmoji(){
+  const emoji = questions[q].match(/[\p{Emoji}]/gu)?.join("") || "❤️";
+  for(let i=0;i<20;i++){
     const e=document.createElement("div");
     e.className="qEmoji";
     e.innerHTML=emoji;
     e.style.left=Math.random()*80+"%";
     e.style.top=Math.random()*80+"%";
-    e.style.fontSize=18+Math.random()*26+"px";
+    e.style.fontSize=18+Math.random()*28+"px";
     question.appendChild(e);
-    setTimeout(()=>e.remove(),2500);
+    setTimeout(()=>e.remove(),2400);
   }
 }
 
 function nextQuestion(){
-  explodeEmojis(questions[q].emoji);
+  explodeQuestionEmoji();
 
   setTimeout(()=>{
     q++;
     if(q<questions.length){
-      qText.innerText=questions[q].text+" "+questions[q].emoji;
+      qText.innerText=questions[q];
     }else{
       question.style.display="none";
-      hack.style.display="block";
+      startHack();
     }
   },900);
+}
+
+function startHack(){
+  hack.style.display="block";
+  const i=setInterval(()=>{
+    hackTop.innerText=hackMsgs[h];
+    bar.style.width=((h+1)/hackMsgs.length)*100+"%";
+    h++;
+    if(h>=hackMsgs.length){
+      clearInterval(i);
+      setTimeout(()=>{
+        hack.style.display="none";
+        finalEnvelope.style.display="flex";
+      },900);
+    }
+  },900);
+}
+
+function openFinal(){
+  finalEnvelope.innerHTML="<h1>Je t’aime ❤️</h1>";
 }
 
 function moveNo(){
