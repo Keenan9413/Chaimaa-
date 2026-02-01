@@ -79,7 +79,7 @@ button{
   100%{transform:translateY(-80px);opacity:0}
 }
 
-/* ===== HACK (ANCIEN) ===== */
+/* ===== HACK ===== */
 #hack{
   background:black;
   color:red;
@@ -131,7 +131,6 @@ button{
   justify-content:center;
   align-items:center;
 }
-
 .finalEnvelope{
   width:220px;
   height:140px;
@@ -167,41 +166,29 @@ button{
 .heart{
   position:absolute;
   animation:floatHeart 6s linear forwards;
-  opacity:.8;
+  opacity:.9;
 }
 @keyframes floatHeart{
   from{transform:translateY(40px) scale(.6);opacity:0}
-  to{transform:translateY(-120px) scale(1);opacity:0}
-}
-
-.innerHeart{
-  position:absolute;
-  animation:innerFloat 4s ease-out forwards;
-}
-@keyframes innerFloat{
-  from{transform:translateY(10px);opacity:0}
-  to{transform:translateY(-50px);opacity:0}
+  to{transform:translateY(-140px) scale(1);opacity:0}
 }
 </style>
 </head>
 
 <body>
 
-<!-- INTRO -->
 <div class="card" id="intro">
   <h1>Pour Chaimaa ❤️</h1>
   <p>Clique sur l’enveloppe</p>
   <img src="IMG_5431.jpeg" class="envelopeIntro" onclick="openIntro()">
 </div>
 
-<!-- QUESTIONS -->
 <div class="card" id="question">
   <h1 id="qText">Veux-tu être ma future femme ? 💍</h1>
   <button id="yes" onclick="nextQuestion()">Oui ❤️</button>
   <button id="no" onmouseover="moveNo()">Non 💔</button>
 </div>
 
-<!-- HACK -->
 <div class="card" id="hack">
   <div class="hackBox">
     <h2 id="hackTop">TRÈS BIEN</h2>
@@ -211,12 +198,10 @@ button{
   </div>
 </div>
 
-<!-- ENVELOPPE FINALE -->
 <div class="card" id="finalEnvelope">
   <div class="finalEnvelope" onclick="openFinal()">💌</div>
 </div>
 
-<!-- MESSAGE FINAL -->
 <div class="card" id="finalMessage">
   <h1 id="typeText"></h1>
   <p id="subText">Joyeuse Saint Chaimaa Beauté 💖</p>
@@ -228,16 +213,11 @@ const questions=[
   "Réfléchis bien… 😘",
   "T’es sûre ? 🤍"
 ];
-
 const hackMsgs=[
-  "TRÈS BIEN",
-  "HACK EN COURS",
-  "SYSTÈME COMPROMIS",
-  "ERREUR SYSTÈME",
-  "TERMINÉ"
+  "TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","ERREUR SYSTÈME","TERMINÉ"
 ];
-
 let q=0,h=0;
+let heartInterval;
 
 window.onload=()=>intro.style.display="block";
 
@@ -301,12 +281,13 @@ function openFinal(){
   finalEnvelope.style.display="none";
   finalMessage.style.display="block";
 
+  // ❤️ COEURS PENDANT L'ÉCRITURE
+  heartInterval=setInterval(spawnHeartAround,200);
+
   typeWriter("Je t’aime ❤️","typeText",120,()=>{
+    clearInterval(heartInterval);
     subText.style.opacity=1;
   });
-
-  setInterval(spawnHeart,250);
-  setInterval(spawnInnerHeart,400);
 }
 
 function typeWriter(text,id,speed,callback){
@@ -322,26 +303,15 @@ function typeWriter(text,id,speed,callback){
   },speed);
 }
 
-function spawnHeart(){
+function spawnHeartAround(){
   const h=document.createElement("div");
   h.className="heart";
   h.innerHTML="❤️";
   h.style.left=Math.random()*100+"vw";
-  h.style.top=Math.random()*100+"vh";
-  h.style.fontSize=16+Math.random()*26+"px";
+  h.style.top="100vh";
+  h.style.fontSize=16+Math.random()*28+"px";
   document.body.appendChild(h);
   setTimeout(()=>h.remove(),6000);
-}
-
-function spawnInnerHeart(){
-  const c=document.createElement("div");
-  c.className="innerHeart";
-  c.innerHTML="❤️";
-  c.style.left=10+Math.random()*80+"%";
-  c.style.bottom="15px";
-  c.style.fontSize=12+Math.random()*14+"px";
-  finalMessage.appendChild(c);
-  setTimeout(()=>c.remove(),4000);
 }
 
 function moveNo(){
