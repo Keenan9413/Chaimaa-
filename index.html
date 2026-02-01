@@ -79,7 +79,7 @@ button{
   100%{transform:translateY(-80px);opacity:0}
 }
 
-/* ===== HACK ===== */
+/* ===== HACK (ANCIEN) ===== */
 #hack{
   background:black;
   color:red;
@@ -89,6 +89,14 @@ button{
 @keyframes blink{
   from{transform:scale(1);}
   to{transform:scale(1.06);}
+}
+.hackBox{animation:shake .12s infinite;}
+@keyframes shake{
+  0%{transform:translate(0,0);}
+  25%{transform:translate(4px,-4px);}
+  50%{transform:translate(-4px,4px);}
+  75%{transform:translate(4px,4px);}
+  100%{transform:translate(0,0);}
 }
 .progress{
   width:100%;
@@ -104,12 +112,26 @@ button{
   background:red;
   transition:width .7s linear;
 }
+.hackProgressText{
+  margin-top:10px;
+  font-size:13px;
+  font-weight:bold;
+  animation:flash .6s infinite;
+}
+@keyframes flash{
+  0%,100%{opacity:1;}
+  50%{opacity:0;}
+}
 
 /* ===== ENVELOPPE FINALE ===== */
 #finalEnvelope{
   background:none;
   box-shadow:none;
+  display:none;
+  justify-content:center;
+  align-items:center;
 }
+
 .finalEnvelope{
   width:220px;
   height:140px;
@@ -132,7 +154,7 @@ button{
 #finalMessage h1{
   color:#ff3f87;
   font-size:34px;
-  min-height:40px;
+  min-height:42px;
 }
 #finalMessage p{
   color:#ff3f87;
@@ -145,10 +167,20 @@ button{
 .heart{
   position:absolute;
   animation:floatHeart 6s linear forwards;
+  opacity:.8;
 }
 @keyframes floatHeart{
-  from{transform:translateY(40px);opacity:0}
-  to{transform:translateY(-120px);opacity:0}
+  from{transform:translateY(40px) scale(.6);opacity:0}
+  to{transform:translateY(-120px) scale(1);opacity:0}
+}
+
+.innerHeart{
+  position:absolute;
+  animation:innerFloat 4s ease-out forwards;
+}
+@keyframes innerFloat{
+  from{transform:translateY(10px);opacity:0}
+  to{transform:translateY(-50px);opacity:0}
 }
 </style>
 </head>
@@ -171,9 +203,12 @@ button{
 
 <!-- HACK -->
 <div class="card" id="hack">
-  <h2 id="hackTop">TRÈS BIEN</h2>
-  <p>JE VAIS TE HACKER ⚠️</p>
-  <div class="progress"><div class="bar" id="bar"></div></div>
+  <div class="hackBox">
+    <h2 id="hackTop">TRÈS BIEN</h2>
+    <p>JE VAIS TE HACKER MAINTENANT ⚠️</p>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="hackProgressText">HACK PROGRESS…</div>
+  </div>
 </div>
 
 <!-- ENVELOPPE FINALE -->
@@ -198,6 +233,7 @@ const hackMsgs=[
   "TRÈS BIEN",
   "HACK EN COURS",
   "SYSTÈME COMPROMIS",
+  "ERREUR SYSTÈME",
   "TERMINÉ"
 ];
 
@@ -256,18 +292,21 @@ function startHack(){
       setTimeout(()=>{
         hack.style.display="none";
         finalEnvelope.style.display="flex";
-      },800);
+      },900);
     }
-  },800);
+  },900);
 }
 
 function openFinal(){
   finalEnvelope.style.display="none";
   finalMessage.style.display="block";
+
   typeWriter("Je t’aime ❤️","typeText",120,()=>{
     subText.style.opacity=1;
   });
-  setInterval(spawnHeart,300);
+
+  setInterval(spawnHeart,250);
+  setInterval(spawnInnerHeart,400);
 }
 
 function typeWriter(text,id,speed,callback){
@@ -288,10 +327,21 @@ function spawnHeart(){
   h.className="heart";
   h.innerHTML="❤️";
   h.style.left=Math.random()*100+"vw";
-  h.style.top="100vh";
-  h.style.fontSize=16+Math.random()*24+"px";
+  h.style.top=Math.random()*100+"vh";
+  h.style.fontSize=16+Math.random()*26+"px";
   document.body.appendChild(h);
   setTimeout(()=>h.remove(),6000);
+}
+
+function spawnInnerHeart(){
+  const c=document.createElement("div");
+  c.className="innerHeart";
+  c.innerHTML="❤️";
+  c.style.left=10+Math.random()*80+"%";
+  c.style.bottom="15px";
+  c.style.fontSize=12+Math.random()*14+"px";
+  finalMessage.appendChild(c);
+  setTimeout(()=>c.remove(),4000);
 }
 
 function moveNo(){
