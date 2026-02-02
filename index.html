@@ -2,272 +2,198 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pour Chaimaa ❤️</title>
+<title>❤️</title>
 
 <style>
+*{box-sizing:border-box;font-family:"Segoe UI",sans-serif}
 body{
   margin:0;
   height:100vh;
+  background:linear-gradient(135deg,#ff9acb,#ff6fae);
   display:flex;
   justify-content:center;
   align-items:center;
-  background:linear-gradient(135deg,#ff9acb,#ff5fa2);
-  font-family:Arial,sans-serif;
   overflow:hidden;
 }
 
-/* ===== CARTES ===== */
 .card{
-  display:none;
-  background:#ffd6e8;
-  padding:25px;
-  border-radius:22px;
-  width:90%;
-  max-width:360px;
-  text-align:center;
-  box-shadow:0 10px 30px rgba(0,0,0,.3);
-  position:relative;
-  z-index:5;
-  overflow:hidden;
-}
-
-/* ===== INTRO ===== */
-.envelopeIntro{
-  width:200px;
-  cursor:pointer;
-  animation:bounce 1.4s infinite;
-}
-@keyframes bounce{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-10px);}
-}
-
-/* ===== BOUTONS ===== */
-button{
-  padding:12px 22px;
-  border:none;
+  background:#ffe3f0;
+  padding:30px 40px;
   border-radius:25px;
-  font-size:16px;
+  box-shadow:0 20px 40px rgba(0,0,0,.2);
+  text-align:center;
+  width:320px;
+  position:relative;
+}
+
+button{
+  border:none;
+  padding:12px 25px;
+  margin:15px;
+  border-radius:20px;
+  font-size:18px;
   cursor:pointer;
-  margin:10px;
 }
-#yes{background:#ff4081;color:white;}
-#no{background:#ccc;position:absolute}
+.yes{background:#ff5fa2;color:white}
+.no{background:#ddd}
 
-/* ===== EMOJIS QUESTIONS ===== */
-.qEmoji{
+.questionEmoji{
   position:absolute;
-  animation:floatQ 3s ease-out forwards;
-  pointer-events:none;
-}
-@keyframes floatQ{
-  from{transform:translateY(20px);opacity:0}
-  20%{opacity:1}
-  to{transform:translateY(-80px);opacity:0}
+  font-size:26px;
+  animation:floatUp 3s linear forwards;
 }
 
-/* ===== HACK ===== */
+@keyframes floatUp{
+  from{opacity:1;transform:translateY(0)}
+  to{opacity:0;transform:translateY(-120px)}
+}
+
+/* HACK */
 #hack{
+  display:none;
+  position:fixed;
+  inset:0;
   background:black;
-  color:red;
-  border:4px solid red;
-  animation:blink .15s infinite alternate;
+  color:#0f0;
+  font-family:monospace;
+  padding:40px;
+  z-index:10;
 }
-@keyframes blink{
-  from{transform:scale(1);}
-  to{transform:scale(1.06);}
-}
-.hackBox{animation:shake .12s infinite;}
-@keyframes shake{
-  0%{transform:translate(0,0);}
-  25%{transform:translate(4px,-4px);}
-  50%{transform:translate(-4px,4px);}
-  75%{transform:translate(4px,4px);}
-  100%{transform:translate(0,0);}
-}
-.progress{
-  width:100%;
-  height:14px;
-  background:#330000;
-  border-radius:10px;
-  margin-top:15px;
-  overflow:hidden;
-}
-.bar{
-  height:100%;
+#hackTop{font-size:18px}
+#bar{
+  margin-top:20px;
+  height:6px;
+  background:#0f0;
   width:0%;
-  background:red;
-  transition:width .7s linear;
-}
-.hackProgressText{
-  margin-top:10px;
-  font-size:13px;
-  font-weight:bold;
-  animation:flash .6s infinite;
-}
-@keyframes flash{
-  0%,100%{opacity:1;}
-  50%{opacity:0;}
 }
 
-/* ===== ENVELOPPE FINALE ===== */
-#finalEnvelope{
-  background:none;
-  box-shadow:none;
-  display:none;
-  justify-content:center;
-  align-items:center;
+/* erreurs hack */
+.hackError{
+  position:fixed;
+  color:#ff2b2b;
+  font-size:12px;
+  font-family:monospace;
+  background:rgba(0,0,0,.75);
+  padding:6px 10px;
+  border-radius:6px;
+  box-shadow:0 0 10px red;
+  animation:errorBlink .25s infinite alternate,errorShake .15s infinite;
+  z-index:20;
 }
-.finalEnvelope{
-  width:220px;
-  height:140px;
+@keyframes errorBlink{from{opacity:1}to{opacity:.3}}
+@keyframes errorShake{
+  0%{transform:translate(0,0)}
+  25%{transform:translate(2px,-2px)}
+  50%{transform:translate(-2px,2px)}
+  75%{transform:translate(2px,2px)}
+  100%{transform:translate(0,0)}
+}
+
+/* enveloppe */
+#envelope{
+  display:none;
+  width:120px;
+  height:80px;
   background:#fff;
-  border-radius:16px;
+  position:relative;
+  border-radius:10px;
+  cursor:pointer;
+}
+#envelope::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,transparent 50%,#f3f3f3 50%);
+  border-radius:10px;
+}
+
+/* lettre */
+#letter{
+  display:none;
+  position:absolute;
+  inset:0;
   display:flex;
   justify-content:center;
   align-items:center;
-  cursor:pointer;
-  box-shadow:0 10px 25px rgba(0,0,0,.25);
-  font-size:46px;
-  animation:pulse 1.6s infinite;
 }
-@keyframes pulse{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.05)}
-}
-
-/* ===== CARTE FINALE ===== */
-.finalCard{
-  background:#ffe4ef;
-  border-radius:28px;
-  padding:35px 25px;
-  width:90%;
-  max-width:420px;
+#letterCard{
+  background:#ffe3f0;
+  padding:30px 40px;
+  border-radius:25px;
+  box-shadow:0 20px 40px rgba(0,0,0,.2);
   text-align:center;
-  box-shadow:0 20px 40px rgba(0,0,0,.25);
-  animation:zoomIn 1s ease forwards;
   position:relative;
-  z-index:5;
 }
-@keyframes zoomIn{
-  from{transform:scale(.6);opacity:0}
-  to{transform:scale(1);opacity:1}
+#finalText{
+  font-size:36px;
+  color:#ff4f9a;
 }
-
-.finalCard h1{
-  color:#ff3f87;
-  font-size:34px;
-  min-height:42px;
-}
-.finalCard p{
-  color:#ff3f87;
+#subText{
+  margin-top:15px;
   font-size:20px;
-  opacity:0;
-  transition:opacity 1s ease;
+  color:#ff4f9a;
 }
 
-/* ===== VAGUE ===== */
-.wave{
-  position:absolute;
-  width:200%;
-  height:200px;
-  background:rgba(255,105,180,.35);
-  bottom:-80px;
-  left:-50%;
-  border-radius:50%;
-  animation:waveMove 6s ease-in-out infinite;
-  z-index:1;
-}
-@keyframes waveMove{
-  0%,100%{transform:translateX(0);}
-  50%{transform:translateX(60px);}
-}
-
-/* ===== COEURS ===== */
 .heart{
-  position:absolute;
-  animation:floatHeart 6s linear forwards;
-  opacity:.8;
+  position:fixed;
+  font-size:24px;
+  animation:heartFloat 3s linear forwards;
 }
-@keyframes floatHeart{
-  from{transform:translateY(40px) scale(.6);opacity:0}
-  20%{opacity:.8}
-  to{transform:translateY(-120px) scale(1);opacity:0}
-}
-
-.innerHeart{
-  position:absolute;
-  animation:innerFloat 4s ease-out forwards;
-}
-@keyframes innerFloat{
-  from{transform:translateY(10px);opacity:0}
-  to{transform:translateY(-50px);opacity:0}
+@keyframes heartFloat{
+  from{opacity:1;transform:translateY(0)}
+  to{opacity:0;transform:translateY(-150px)}
 }
 </style>
 </head>
 
 <body>
 
-<div class="card" id="intro">
-  <h1>Pour Chaimaa ❤️</h1>
-  <p>Clique sur l’enveloppe</p>
-  <img src="IMG_5431.jpeg" class="envelopeIntro" onclick="openIntro()">
-</div>
-
 <div class="card" id="question">
-  <h1 id="qText">Veux-tu être ma future femme ? 💍</h1>
-  <button id="yes" onclick="nextQuestion()">Oui ❤️</button>
-  <button id="no" onmouseover="moveNo()">Non 💔</button>
+  <h2 id="qText"></h2>
+  <button class="yes" onclick="yes()">Oui</button>
+  <button class="no">Non</button>
 </div>
 
-<div class="card" id="hack">
-  <div class="hackBox">
-    <h2 id="hackTop">TRÈS BIEN</h2>
-    <p>JE VAIS TE HACKER MAINTENANT ⚠️</p>
-    <div class="progress"><div class="bar" id="bar"></div></div>
-    <div class="hackProgressText">HACK PROGRESS…</div>
+<div id="hack">
+  <div id="hackTop"></div>
+  <div id="bar"></div>
+</div>
+
+<div id="envelope" onclick="openLetter()"></div>
+
+<div id="letter">
+  <div id="letterCard">
+    <div id="finalText"></div>
+    <div id="subText"></div>
   </div>
-</div>
-
-<div class="card" id="finalEnvelope">
-  <div class="finalEnvelope" onclick="openFinal()">💌</div>
 </div>
 
 <script>
 const questions=[
-  "Veux-tu être ma future femme ? 💍",
-  "Réfléchis bien… 😘",
-  "T’es sûre ? 🤍"
+  "Tu m’aimes ? ❤️",
+  "Tu veux être toujours avec moi ? 💍",
+  "Veux-tu être ma future femme ? 👰"
 ];
-const hackMsgs=[
-  "TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","ERREUR SYSTÈME","TERMINÉ"
-];
-let q=0,h=0;
+let q=0;
 
-window.onload=()=>intro.style.display="block";
-
-function openIntro(){
-  intro.style.display="none";
-  question.style.display="block";
-}
+const qText=document.getElementById("qText");
+const question=document.getElementById("question");
+qText.innerText=questions[q];
 
 function spawnQuestionEmoji(){
-  const emoji=questions[q].match(/[\p{Emoji}]/gu)?.join("")||"❤️";
   const e=document.createElement("div");
-  e.className="qEmoji";
-  e.innerHTML=emoji;
+  e.className="questionEmoji";
+  e.innerText=questions[q].match(/[\p{Emoji}]/u)[0];
   e.style.left=Math.random()*80+"%";
-  e.style.bottom="10px";
-  e.style.fontSize=22+Math.random()*22+"px";
+  e.style.top=Math.random()*60+"%";
   question.appendChild(e);
   setTimeout(()=>e.remove(),3000);
 }
 
-function nextQuestion(){
-  const rain=setInterval(spawnQuestionEmoji,120);
+function yes(){
+  const i=setInterval(spawnQuestionEmoji,120);
   setTimeout(()=>{
-    clearInterval(rain);
+    clearInterval(i);
     q++;
     if(q<questions.length){
       qText.innerText=questions[q];
@@ -278,75 +204,87 @@ function nextQuestion(){
   },800);
 }
 
+/* hack */
+const hack=document.getElementById("hack");
+const hackTop=document.getElementById("hackTop");
+const bar=document.getElementById("bar");
+const hackMsgs=[
+  "Connexion au serveur...",
+  "Accès aux données...",
+  "Injection du payload...",
+  "Désactivation sécurité...",
+  "Contrôle total acquis"
+];
+let h=0;
+
+const errorMessages=[
+  "ERROR 0x000FF","ACCESS DENIED","MEMORY CORRUPTED",
+  "SYSTEM FAILURE","DATA BREACH","KERNEL PANIC"
+];
+let hackErrorInterval;
+
+function spawnHackError(){
+  const e=document.createElement("div");
+  e.className="hackError";
+  e.innerText=errorMessages[Math.floor(Math.random()*errorMessages.length)];
+  e.style.left=Math.random()*100+"vw";
+  e.style.top=Math.random()*100+"vh";
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),1500);
+}
+
 function startHack(){
   hack.style.display="block";
+  hackErrorInterval=setInterval(spawnHackError,120);
+
   const i=setInterval(()=>{
     hackTop.innerText=hackMsgs[h];
     bar.style.width=((h+1)/hackMsgs.length)*100+"%";
     h++;
     if(h>=hackMsgs.length){
       clearInterval(i);
+      clearInterval(hackErrorInterval);
+      document.querySelectorAll(".hackError").forEach(e=>e.remove());
       setTimeout(()=>{
         hack.style.display="none";
-        finalEnvelope.style.display="flex";
-      },900);
+        document.getElementById("envelope").style.display="block";
+      },800);
     }
   },900);
 }
 
-function openFinal(){
-  finalEnvelope.innerHTML=`
-    <div class="wave"></div>
-    <div class="finalCard">
-      <h1 id="typeText"></h1>
-      <p id="subText">Joyeuse Saint Chaimaa Beauté 💖</p>
-    </div>`;
-
-  typeWriter("Je t’aime ❤️","typeText",120,()=>{
-    document.getElementById("subText").style.opacity=1;
+/* lettre */
+function openLetter(){
+  document.getElementById("envelope").style.display="none";
+  document.getElementById("letter").style.display="flex";
+  typeText("Je t’aime ❤️",document.getElementById("finalText"),()=>{
+    spawnHearts();
+    document.getElementById("subText").innerText="Joyeuse Saint Chaimaa Beauté 💖";
   });
-
-  setInterval(spawnHeart,250);
-  setInterval(spawnInnerHeart,400);
 }
 
-function typeWriter(text,id,speed,cb){
+function typeText(text,el,cb){
   let i=0;
-  const el=document.getElementById(id);
-  el.innerHTML="";
   const t=setInterval(()=>{
-    el.innerHTML+=text.charAt(i++);
+    el.innerText+=text[i];
+    i++;
     if(i>=text.length){
       clearInterval(t);
-      cb&&cb();
+      cb();
     }
-  },speed);
+  },120);
 }
 
-function spawnHeart(){
-  const h=document.createElement("div");
-  h.className="heart";
-  h.innerHTML="❤️";
-  h.style.left=Math.random()*100+"vw";
-  h.style.top=Math.random()*100+"vh";
-  h.style.fontSize=16+Math.random()*26+"px";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),6000);
-}
-
-function spawnInnerHeart(){
-  const c=document.createElement("div");
-  c.className="innerHeart";
-  c.innerHTML="❤️";
-  c.style.left=10+Math.random()*80+"%";
-  c.style.bottom="15px";
-  c.style.fontSize=12+Math.random()*14+"px";
-  document.querySelector(".finalCard")?.appendChild(c);
-  setTimeout(()=>c.remove(),4000);
-}
-
-function moveNo(){
-  no.style.transform=`translate(${Math.random()*120-60}px,${Math.random()*80-40}px)`;
+function spawnHearts(){
+  const i=setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerText="❤️";
+    h.style.left=Math.random()*100+"vw";
+    h.style.top="100vh";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),3000);
+  },150);
 }
 </script>
 
