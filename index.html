@@ -43,6 +43,11 @@ body.finalBg{
   width:200px;
   cursor:pointer;
   animation:bounce 1.4s infinite;
+  transition:transform .8s ease, opacity .8s ease;
+}
+.envelopeIntro.open{
+  transform:scale(1.3) rotateX(60deg);
+  opacity:0;
 }
 @keyframes bounce{
   0%,100%{transform:translateY(0);}
@@ -73,7 +78,7 @@ button{
   to{transform:translateY(-80px);opacity:0}
 }
 
-/* ===== HACK (INCHANGÉ) ===== */
+/* ===== HACK ===== */
 #hack{
   background:black;
   color:red;
@@ -116,6 +121,21 @@ button{
   50%{opacity:0;}
 }
 
+/* ===== ERREURS HACK PARTOUT ===== */
+.hackError{
+  position:absolute;
+  color:red;
+  font-size:14px;
+  animation:glitch 1s infinite;
+  pointer-events:none;
+}
+@keyframes glitch{
+  0%{opacity:0}
+  20%{opacity:1}
+  80%{opacity:1}
+  100%{opacity:0}
+}
+
 /* ===== ENVELOPPE FINALE ===== */
 #finalEnvelope{
   display:none;
@@ -126,7 +146,7 @@ button{
   z-index:10;
 }
 
-/* ===== CARTE FINALE ===== */
+/* ===== MESSAGE FINAL ===== */
 .finalCard{
   background:#ffe4ef;
   border-radius:28px;
@@ -143,7 +163,7 @@ button{
 }
 .finalCard h1{
   color:#ff3f87;
-  font-size:34px;
+  font-size:30px;
 }
 
 /* ===== COEURS ===== */
@@ -183,7 +203,7 @@ button{
 </div>
 
 <div id="finalEnvelope">
-  <img src="IMG_5431.jpeg" class="envelopeIntro" onclick="openFinal()">
+  <img src="IMG_5431.jpeg" id="finalEnv" class="envelopeIntro" onclick="openFinal()">
 </div>
 
 <script>
@@ -195,7 +215,11 @@ const questions=[
 const hackMsgs=[
   "TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","ERREUR SYSTÈME","TERMINÉ"
 ];
-let q=0,h=0;
+const errorTexts=[
+  "ERROR 404","ACCESS DENIED","DATA CORRUPTED","⚠️ SYSTEM FAILURE ⚠️","FATAL ERROR"
+];
+
+let q=0,h=0,errorInterval;
 
 window.onload=()=>intro.style.display="block";
 
@@ -228,14 +252,28 @@ function nextQuestion(){
   },800);
 }
 
+function spawnHackError(){
+  const e=document.createElement("div");
+  e.className="hackError";
+  e.innerText=errorTexts[Math.floor(Math.random()*errorTexts.length)];
+  e.style.left=Math.random()*100+"vw";
+  e.style.top=Math.random()*100+"vh";
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),1200);
+}
+
 function startHack(){
   hack.style.display="block";
+  errorInterval=setInterval(spawnHackError,120);
+
   const i=setInterval(()=>{
     hackTop.innerText=hackMsgs[h];
     bar.style.width=((h+1)/hackMsgs.length)*100+"%";
     h++;
     if(h>=hackMsgs.length){
       clearInterval(i);
+      clearInterval(errorInterval);
+      document.querySelectorAll(".hackError").forEach(e=>e.remove());
       setTimeout(()=>{
         hack.style.display="none";
         document.body.classList.add("finalBg");
@@ -246,12 +284,21 @@ function startHack(){
 }
 
 function openFinal(){
-  finalEnvelope.innerHTML=`
-    <div class="finalCard">
-      <h1 id="typeText"></h1>
-    </div>`;
-  typeWriter("Je t’aime ❤️","typeText",120);
-  setInterval(spawnHeart,250);
+  const env=document.getElementById("finalEnv");
+  env.classList.add("open");
+
+  setTimeout(()=>{
+    finalEnvelope.innerHTML=`
+      <div class="finalCard">
+        <h1 id="typeText"></h1>
+      </div>`;
+    typeWriter(
+      "Je t’aime plus que tout ❤️ Tu es la femme de ma vie, mon présent et mon futur 💍",
+      "typeText",
+      60
+    );
+    setInterval(spawnHeart,250);
+  },800);
 }
 
 function typeWriter(text,id,speed){
