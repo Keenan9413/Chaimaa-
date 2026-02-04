@@ -8,7 +8,6 @@
 <style>
 body{
   margin:0;
-  width:100vw;
   height:100vh;
   display:flex;
   justify-content:center;
@@ -16,12 +15,6 @@ body{
   background:linear-gradient(135deg,#ff9acb,#ff5fa2);
   font-family:Arial,sans-serif;
   overflow:hidden;
-  transition:background 1s ease;
-}
-
-/* ===== FOND FINAL ===== */
-body.finalBg{
-  background:url("IMG_1083.jpeg") center/cover no-repeat;
 }
 
 /* ===== CARTES ===== */
@@ -36,9 +29,10 @@ body.finalBg{
   box-shadow:0 10px 30px rgba(0,0,0,.3);
   position:relative;
   z-index:5;
+  overflow:hidden;
 }
 
-/* ===== ENVELOPPE ===== */
+/* ===== ENVELOPPE (INTRO + FIN) ===== */
 .envelopeIntro{
   width:200px;
   cursor:pointer;
@@ -46,7 +40,7 @@ body.finalBg{
   transition:transform .8s ease, opacity .8s ease;
 }
 .envelopeIntro.open{
-  transform:scale(1.3) rotateX(60deg);
+  transform:scale(1.3) rotateX(70deg);
   opacity:0;
 }
 @keyframes bounce{
@@ -109,6 +103,7 @@ button{
   height:100%;
   width:0%;
   background:red;
+  transition:width .7s linear;
 }
 .hackProgressText{
   margin-top:10px;
@@ -121,32 +116,22 @@ button{
   50%{opacity:0;}
 }
 
-/* ===== ERREURS HACK PARTOUT ===== */
-.hackError{
-  position:absolute;
+/* ===== CHAOS HACK (EXTÉRIEUR) ===== */
+.hackChaos{
+  position:fixed;
+  z-index:1;
   color:red;
-  font-size:14px;
-  animation:glitch 1s infinite;
+  font-weight:bold;
   pointer-events:none;
+  animation:chaos 2.5s linear forwards;
 }
-@keyframes glitch{
-  0%{opacity:0}
+@keyframes chaos{
+  from{opacity:0;transform:scale(.6)}
   20%{opacity:1}
-  80%{opacity:1}
-  100%{opacity:0}
+  to{opacity:0;transform:translateY(-80px) scale(1.2)}
 }
 
-/* ===== ENVELOPPE FINALE ===== */
-#finalEnvelope{
-  display:none;
-  position:absolute;
-  inset:0;
-  justify-content:center;
-  align-items:center;
-  z-index:10;
-}
-
-/* ===== MESSAGE FINAL ===== */
+/* ===== FINAL ===== */
 .finalCard{
   background:#ffe4ef;
   border-radius:28px;
@@ -163,18 +148,25 @@ button{
 }
 .finalCard h1{
   color:#ff3f87;
-  font-size:30px;
+  font-size:34px;
+}
+.finalCard p{
+  color:#ff3f87;
+  font-size:20px;
+  opacity:0;
+  transition:opacity 1s ease;
 }
 
 /* ===== COEURS ===== */
 .heart{
   position:absolute;
   animation:floatHeart 6s linear forwards;
+  opacity:.8;
 }
 @keyframes floatHeart{
-  from{transform:translateY(40px);opacity:0}
-  20%{opacity:1}
-  to{transform:translateY(-120px);opacity:0}
+  from{transform:translateY(40px) scale(.6);opacity:0}
+  20%{opacity:.8}
+  to{transform:translateY(-120px) scale(1);opacity:0}
 }
 </style>
 </head>
@@ -202,7 +194,7 @@ button{
   </div>
 </div>
 
-<div id="finalEnvelope">
+<div class="card" id="finalEnvelope">
   <img src="IMG_5431.jpeg" id="finalEnv" class="envelopeIntro" onclick="openFinal()">
 </div>
 
@@ -212,14 +204,10 @@ const questions=[
   "Réfléchis bien… 😘",
   "T’es sûre ? 🤍"
 ];
-const hackMsgs=[
-  "TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","ERREUR SYSTÈME","TERMINÉ"
-];
-const errorTexts=[
-  "ERROR 404","ACCESS DENIED","DATA CORRUPTED","⚠️ SYSTEM FAILURE ⚠️","FATAL ERROR"
-];
+const hackMsgs=["TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","ERREUR SYSTÈME","TERMINÉ"];
+const errors=["ERROR 0xA94F","ACCESS DENIED","SYSTEM FAILURE","⚠️","DATA LOST"];
 
-let q=0,h=0,errorInterval;
+let q=0,h=0, chaos;
 
 window.onload=()=>intro.style.display="block";
 
@@ -229,11 +217,13 @@ function openIntro(){
 }
 
 function spawnQuestionEmoji(){
+  const emoji=questions[q].match(/[\p{Emoji}]/gu)?.join("")||"❤️";
   const e=document.createElement("div");
   e.className="qEmoji";
-  e.innerHTML="💍";
+  e.innerHTML=emoji;
   e.style.left=Math.random()*80+"%";
   e.style.bottom="10px";
+  e.style.fontSize=22+Math.random()*22+"px";
   question.appendChild(e);
   setTimeout(()=>e.remove(),3000);
 }
@@ -252,19 +242,20 @@ function nextQuestion(){
   },800);
 }
 
-function spawnHackError(){
+function spawnHackChaos(){
   const e=document.createElement("div");
-  e.className="hackError";
-  e.innerText=errorTexts[Math.floor(Math.random()*errorTexts.length)];
+  e.className="hackChaos";
+  e.innerHTML=errors[Math.floor(Math.random()*errors.length)];
   e.style.left=Math.random()*100+"vw";
   e.style.top=Math.random()*100+"vh";
+  e.style.fontSize=14+Math.random()*26+"px";
   document.body.appendChild(e);
-  setTimeout(()=>e.remove(),1200);
+  setTimeout(()=>e.remove(),2500);
 }
 
 function startHack(){
   hack.style.display="block";
-  errorInterval=setInterval(spawnHackError,120);
+  chaos=setInterval(spawnHackChaos,70);
 
   const i=setInterval(()=>{
     hackTop.innerText=hackMsgs[h];
@@ -272,13 +263,11 @@ function startHack(){
     h++;
     if(h>=hackMsgs.length){
       clearInterval(i);
-      clearInterval(errorInterval);
-      document.querySelectorAll(".hackError").forEach(e=>e.remove());
+      clearInterval(chaos);
       setTimeout(()=>{
         hack.style.display="none";
-        document.body.classList.add("finalBg");
-        finalEnvelope.style.display="flex";
-      },800);
+        finalEnvelope.style.display="block";
+      },900);
     }
   },900);
 }
@@ -291,22 +280,25 @@ function openFinal(){
     finalEnvelope.innerHTML=`
       <div class="finalCard">
         <h1 id="typeText"></h1>
+        <p id="subText">Joyeuse Saint Chaimaa Beauté 💖</p>
       </div>`;
-    typeWriter(
-      "Je t’aime plus que tout ❤️ Tu es la femme de ma vie, mon présent et mon futur 💍",
-      "typeText",
-      60
-    );
+    typeWriter("Je t’aime ❤️","typeText",120,()=>{
+      document.getElementById("subText").style.opacity=1;
+    });
     setInterval(spawnHeart,250);
   },800);
 }
 
-function typeWriter(text,id,speed){
+function typeWriter(text,id,speed,cb){
   let i=0;
   const el=document.getElementById(id);
+  el.innerHTML="";
   const t=setInterval(()=>{
     el.innerHTML+=text.charAt(i++);
-    if(i>=text.length) clearInterval(t);
+    if(i>=text.length){
+      clearInterval(t);
+      cb&&cb();
+    }
   },speed);
 }
 
@@ -316,6 +308,7 @@ function spawnHeart(){
   h.innerHTML="❤️";
   h.style.left=Math.random()*100+"vw";
   h.style.top=Math.random()*100+"vh";
+  h.style.fontSize=16+Math.random()*26+"px";
   document.body.appendChild(h);
   setTimeout(()=>h.remove(),6000);
 }
