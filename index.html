@@ -15,6 +15,7 @@ body{
   background:linear-gradient(135deg,#ff9acb,#ff5fa2);
   font-family:Arial,sans-serif;
   overflow:hidden;
+  transition:background 1s ease;
 }
 
 /* ===== CARTES ===== */
@@ -33,7 +34,7 @@ body{
 }
 
 /* ===== ENVELOPPE ===== */
-.envelopeIntro{
+.envelope{
   width:200px;
   cursor:pointer;
   animation:bounce 1.4s infinite;
@@ -126,18 +127,17 @@ button{
   to{opacity:0;transform:translateY(-80px) scale(1.2)}
 }
 
-/* ===== ENVELOPPE FINALE ===== */
-#finalEnvelope{
-  all:unset;
-  position:absolute;
+/* ===== FINAL ===== */
+#final{
+  position:fixed;
   inset:0;
   display:none;
   justify-content:center;
   align-items:center;
   z-index:10;
+  flex-direction:column;
 }
 
-/* ===== MESSAGE FINAL ===== */
 .finalCard{
   background:#ffe4ef;
   border-radius:28px;
@@ -181,7 +181,7 @@ button{
 <div class="card" id="intro">
   <h1>Pour Chaimaa ❤️</h1>
   <p>Clique sur l’enveloppe</p>
-  <img src="IMG_5431.jpeg" class="envelopeIntro" onclick="openIntro()">
+  <img src="IMG_5431.jpeg" class="envelope" onclick="openIntro()">
 </div>
 
 <div class="card" id="question">
@@ -199,8 +199,8 @@ button{
   </div>
 </div>
 
-<div id="finalEnvelope">
-  <img src="IMG_5431.jpeg" class="envelopeIntro" onclick="openFinal()">
+<div id="final">
+  <img src="IMG_5431.jpeg" class="envelope" onclick="openFinal()">
 </div>
 
 <script>
@@ -271,14 +271,18 @@ function startHack(){
       clearInterval(chaos);
       setTimeout(()=>{
         hack.style.display="none";
-        finalEnvelope.style.display="flex";
+
+        document.body.style.background =
+          "url('IMG_1083.jpeg') center/cover no-repeat";
+
+        final.style.display="flex";
       },900);
     }
   },900);
 }
 
 function openFinal(){
-  finalEnvelope.innerHTML=`
+  final.innerHTML=`
     <div class="finalCard">
       <h1 id="typeText"></h1>
       <p id="subText">Joyeuse Saint Chaimaa Beauté 💖</p>
