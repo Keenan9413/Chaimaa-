@@ -32,7 +32,7 @@ body{
   overflow:hidden;
 }
 
-/* ===== INTRO ===== */
+/* ===== ENVELOPPE (INTRO + FIN) ===== */
 .envelopeIntro{
   width:200px;
   cursor:pointer;
@@ -111,10 +111,10 @@ button{
   50%{opacity:0;}
 }
 
-/* ===== CHAOS HACK (VISIBLE PARTOUT) ===== */
+/* ===== CHAOS HACK (EXTÉRIEUR UNIQUEMENT) ===== */
 .hackChaos{
   position:fixed;
-  z-index:9999;
+  z-index:1; /* DERRIÈRE la carte */
   color:red;
   font-weight:bold;
   pointer-events:none;
@@ -124,32 +124,6 @@ button{
   from{opacity:0;transform:scale(.6)}
   20%{opacity:1}
   to{opacity:0;transform:translateY(-80px) scale(1.2)}
-}
-
-/* ===== ENVELOPPE FINALE ===== */
-#finalEnvelope{
-  background:none;
-  box-shadow:none;
-  display:none;
-  justify-content:center;
-  align-items:center;
-}
-.finalEnvelope{
-  width:220px;
-  height:140px;
-  background:#fff;
-  border-radius:16px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  cursor:pointer;
-  box-shadow:0 10px 25px rgba(0,0,0,.25);
-  font-size:46px;
-  animation:pulse 1.6s infinite;
-}
-@keyframes pulse{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.05)}
 }
 
 /* ===== FINAL ===== */
@@ -167,7 +141,6 @@ button{
   from{transform:scale(.6);opacity:0}
   to{transform:scale(1);opacity:1}
 }
-
 .finalCard h1{
   color:#ff3f87;
   font-size:34px;
@@ -189,14 +162,6 @@ button{
   from{transform:translateY(40px) scale(.6);opacity:0}
   20%{opacity:.8}
   to{transform:translateY(-120px) scale(1);opacity:0}
-}
-.innerHeart{
-  position:absolute;
-  animation:innerFloat 4s ease-out forwards;
-}
-@keyframes innerFloat{
-  from{transform:translateY(10px);opacity:0}
-  to{transform:translateY(-50px);opacity:0}
 }
 </style>
 </head>
@@ -225,7 +190,7 @@ button{
 </div>
 
 <div class="card" id="finalEnvelope">
-  <div class="finalEnvelope" onclick="openFinal()">💌</div>
+  <img src="IMG_5431.jpeg" class="envelopeIntro" onclick="openFinal()">
 </div>
 
 <script>
@@ -235,7 +200,7 @@ const questions=[
   "T’es sûre ? 🤍"
 ];
 const hackMsgs=["TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","ERREUR SYSTÈME","TERMINÉ"];
-const errors=["ERROR 0xA94F","ACCESS DENIED","SYSTEM FAILURE","MEMORY CORRUPTED","⚠️"];
+const errors=["ERROR 0xA94F","ACCESS DENIED","SYSTEM FAILURE","⚠️","DATA LOST"];
 
 let q=0,h=0, chaos;
 
@@ -278,7 +243,7 @@ function spawnHackChaos(){
   e.innerHTML=errors[Math.floor(Math.random()*errors.length)];
   e.style.left=Math.random()*100+"vw";
   e.style.top=Math.random()*100+"vh";
-  e.style.fontSize=16+Math.random()*30+"px";
+  e.style.fontSize=14+Math.random()*26+"px";
   document.body.appendChild(e);
   setTimeout(()=>e.remove(),2500);
 }
@@ -308,13 +273,10 @@ function openFinal(){
       <h1 id="typeText"></h1>
       <p id="subText">Joyeuse Saint Chaimaa Beauté 💖</p>
     </div>`;
-
   typeWriter("Je t’aime ❤️","typeText",120,()=>{
     document.getElementById("subText").style.opacity=1;
   });
-
   setInterval(spawnHeart,250);
-  setInterval(spawnInnerHeart,400);
 }
 
 function typeWriter(text,id,speed,cb){
@@ -341,17 +303,6 @@ function spawnHeart(){
   setTimeout(()=>h.remove(),6000);
 }
 
-function spawnInnerHeart(){
-  const c=document.createElement("div");
-  c.className="innerHeart";
-  c.innerHTML="❤️";
-  c.style.left=10+Math.random()*80+"%";
-  c.style.bottom="15px";
-  c.style.fontSize=12+Math.random()*14+"px";
-  document.querySelector(".finalCard")?.appendChild(c);
-  setTimeout(()=>c.remove(),4000);
-}
-
 function moveNo(){
   no.style.transform=`translate(${Math.random()*120-60}px,${Math.random()*80-40}px)`;
 }
@@ -359,4 +310,3 @@ function moveNo(){
 
 </body>
 </html>
-
