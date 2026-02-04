@@ -111,6 +111,21 @@ button{
   50%{opacity:0;}
 }
 
+/* ===== HACK CHAOS ===== */
+.hackEmoji, .hackError{
+  position:absolute;
+  color:red;
+  font-weight:bold;
+  animation:chaos 2.5s linear forwards;
+  pointer-events:none;
+  z-index:3;
+}
+@keyframes chaos{
+  from{opacity:0;transform:scale(.5)}
+  20%{opacity:1}
+  to{opacity:0;transform:translateY(-60px) scale(1.2)}
+}
+
 /* ===== ENVELOPPE FINALE ===== */
 #finalEnvelope{
   background:none;
@@ -167,23 +182,6 @@ button{
   transition:opacity 1s ease;
 }
 
-/* ===== VAGUE ===== */
-.wave{
-  position:absolute;
-  width:200%;
-  height:200px;
-  background:rgba(255,105,180,.35);
-  bottom:-80px;
-  left:-50%;
-  border-radius:50%;
-  animation:waveMove 6s ease-in-out infinite;
-  z-index:1;
-}
-@keyframes waveMove{
-  0%,100%{transform:translateX(0);}
-  50%{transform:translateX(60px);}
-}
-
 /* ===== COEURS ===== */
 .heart{
   position:absolute;
@@ -195,7 +193,6 @@ button{
   20%{opacity:.8}
   to{transform:translateY(-120px) scale(1);opacity:0}
 }
-
 .innerHeart{
   position:absolute;
   animation:innerFloat 4s ease-out forwards;
@@ -240,10 +237,10 @@ const questions=[
   "Réfléchis bien… 😘",
   "T’es sûre ? 🤍"
 ];
-const hackMsgs=[
-  "TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","ERREUR SYSTÈME","TERMINÉ"
-];
-let q=0,h=0;
+const hackMsgs=["TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","ERREUR SYSTÈME","TERMINÉ"];
+const errors=["ERROR 0xA94F","ACCESS DENIED","MEMORY CORRUPTED","FATAL EXCEPTION","SYSTEM FAILURE"];
+
+let q=0,h=0, chaosInterval;
 
 window.onload=()=>intro.style.display="block";
 
@@ -278,14 +275,28 @@ function nextQuestion(){
   },800);
 }
 
+function spawnHackChaos(){
+  const e=document.createElement("div");
+  e.className=Math.random()>.5?"hackEmoji":"hackError";
+  e.innerHTML=Math.random()>.5?"⚠️":errors[Math.floor(Math.random()*errors.length)];
+  e.style.left=Math.random()*100+"vw";
+  e.style.top=Math.random()*100+"vh";
+  e.style.fontSize=18+Math.random()*28+"px";
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),2500);
+}
+
 function startHack(){
   hack.style.display="block";
+  chaosInterval=setInterval(spawnHackChaos,80);
+
   const i=setInterval(()=>{
     hackTop.innerText=hackMsgs[h];
     bar.style.width=((h+1)/hackMsgs.length)*100+"%";
     h++;
     if(h>=hackMsgs.length){
       clearInterval(i);
+      clearInterval(chaosInterval);
       setTimeout(()=>{
         hack.style.display="none";
         finalEnvelope.style.display="flex";
@@ -296,7 +307,6 @@ function startHack(){
 
 function openFinal(){
   finalEnvelope.innerHTML=`
-    <div class="wave"></div>
     <div class="finalCard">
       <h1 id="typeText"></h1>
       <p id="subText">Joyeuse Saint Chaimaa Beauté 💖</p>
