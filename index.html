@@ -32,7 +32,7 @@ body{
   overflow:hidden;
 }
 
-/* ===== ENVELOPPE (INTRO + FIN) ===== */
+/* ===== ENVELOPPE ===== */
 .envelopeIntro{
   width:200px;
   cursor:pointer;
@@ -92,7 +92,6 @@ button{
   background:#330000;
   border-radius:10px;
   margin-top:15px;
-  overflow:hidden;
 }
 .bar{
   height:100%;
@@ -100,21 +99,11 @@ button{
   background:red;
   transition:width .7s linear;
 }
-.hackProgressText{
-  margin-top:10px;
-  font-size:13px;
-  font-weight:bold;
-  animation:flash .6s infinite;
-}
-@keyframes flash{
-  0%,100%{opacity:1;}
-  50%{opacity:0;}
-}
 
-/* ===== CHAOS HACK (EXTÉRIEUR UNIQUEMENT) ===== */
+/* ===== CHAOS HACK ===== */
 .hackChaos{
   position:fixed;
-  z-index:1; /* DERRIÈRE la carte */
+  z-index:1;
   color:red;
   font-weight:bold;
   pointer-events:none;
@@ -127,6 +116,11 @@ button{
 }
 
 /* ===== FINAL ===== */
+#finalEnvelope{
+  background:none;
+  box-shadow:none;
+}
+
 .finalCard{
   background:#ffe4ef;
   border-radius:28px;
@@ -185,7 +179,6 @@ button{
     <h2 id="hackTop">TRÈS BIEN</h2>
     <p>JE VAIS TE HACKER MAINTENANT ⚠️</p>
     <div class="progress"><div class="bar" id="bar"></div></div>
-    <div class="hackProgressText">HACK PROGRESS…</div>
   </div>
 </div>
 
@@ -200,7 +193,7 @@ const questions=[
   "T’es sûre ? 🤍"
 ];
 const hackMsgs=["TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","ERREUR SYSTÈME","TERMINÉ"];
-const errors=["ERROR 0xA94F","ACCESS DENIED","SYSTEM FAILURE","⚠️","DATA LOST"];
+const errors=["⚠️","ERROR 0xA94F","ACCESS DENIED","SYSTEM FAILURE"];
 
 let q=0,h=0, chaos;
 
@@ -212,10 +205,9 @@ function openIntro(){
 }
 
 function spawnQuestionEmoji(){
-  const emoji=questions[q].match(/[\p{Emoji}]/gu)?.join("")||"❤️";
   const e=document.createElement("div");
   e.className="qEmoji";
-  e.innerHTML=emoji;
+  e.innerHTML="💍";
   e.style.left=Math.random()*80+"%";
   e.style.bottom="10px";
   e.style.fontSize=22+Math.random()*22+"px";
@@ -259,10 +251,11 @@ function startHack(){
     if(h>=hackMsgs.length){
       clearInterval(i);
       clearInterval(chaos);
+      document.querySelectorAll(".hackChaos").forEach(e=>e.remove());
       setTimeout(()=>{
         hack.style.display="none";
         finalEnvelope.style.display="flex";
-      },900);
+      },800);
     }
   },900);
 }
