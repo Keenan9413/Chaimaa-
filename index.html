@@ -29,10 +29,9 @@ body{
   box-shadow:0 10px 30px rgba(0,0,0,.3);
   position:relative;
   z-index:5;
-  overflow:hidden;
 }
 
-/* ===== ENVELOPPE ===== */
+/* ===== ENVELOPPE INTRO ===== */
 .envelopeIntro{
   width:200px;
   cursor:pointer;
@@ -76,8 +75,9 @@ button{
 }
 @keyframes blink{
   from{transform:scale(1);}
-  to{transform:scale(1.06);}
+  to{transform:scale(1.05);}
 }
+
 .hackBox{animation:shake .12s infinite;}
 @keyframes shake{
   0%{transform:translate(0,0);}
@@ -86,64 +86,45 @@ button{
   75%{transform:translate(4px,4px);}
   100%{transform:translate(0,0);}
 }
+
 .progress{
   width:100%;
   height:14px;
   background:#330000;
   border-radius:10px;
   margin-top:15px;
+  overflow:hidden;
 }
 .bar{
   height:100%;
   width:0%;
   background:red;
-  transition:width .7s linear;
+  transition:width .6s linear;
 }
 
-/* ===== CHAOS HACK ===== */
-.hackChaos{
-  position:fixed;
-  z-index:1;
+/* ===== ERREURS AUTOUR ===== */
+.error{
+  position:absolute;
   color:red;
+  font-size:14px;
   font-weight:bold;
+  animation:errorFlash .4s infinite;
   pointer-events:none;
-  animation:chaos 2.5s linear forwards;
 }
-@keyframes chaos{
-  from{opacity:0;transform:scale(.6)}
-  20%{opacity:1}
-  to{opacity:0;transform:translateY(-80px) scale(1.2)}
+@keyframes errorFlash{
+  0%,100%{opacity:1;}
+  50%{opacity:0;}
 }
 
-/* ===== FINAL ===== */
+/* ===== ENVELOPPE FINALE (RESET TOTAL) ===== */
 #finalEnvelope{
-  background:none;
-  box-shadow:none;
-}
-
-.finalCard{
-  background:#ffe4ef;
-  border-radius:28px;
-  padding:35px 25px;
-  width:90%;
-  max-width:420px;
-  text-align:center;
-  box-shadow:0 20px 40px rgba(0,0,0,.25);
-  animation:zoomIn 1s ease forwards;
-}
-@keyframes zoomIn{
-  from{transform:scale(.6);opacity:0}
-  to{transform:scale(1);opacity:1}
-}
-.finalCard h1{
-  color:#ff3f87;
-  font-size:34px;
-}
-.finalCard p{
-  color:#ff3f87;
-  font-size:20px;
-  opacity:0;
-  transition:opacity 1s ease;
+  all:unset;
+  position:absolute;
+  inset:0;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:10;
 }
 
 /* ===== COEURS ===== */
@@ -177,12 +158,12 @@ button{
 <div class="card" id="hack">
   <div class="hackBox">
     <h2 id="hackTop">TRÈS BIEN</h2>
-    <p>JE VAIS TE HACKER MAINTENANT ⚠️</p>
+    <p>JE VAIS TE HACKER ⚠️</p>
     <div class="progress"><div class="bar" id="bar"></div></div>
   </div>
 </div>
 
-<div class="card" id="finalEnvelope">
+<div id="finalEnvelope">
   <img src="IMG_5431.jpeg" class="envelopeIntro" onclick="openFinal()">
 </div>
 
@@ -192,10 +173,11 @@ const questions=[
   "Réfléchis bien… 😘",
   "T’es sûre ? 🤍"
 ];
-const hackMsgs=["TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","ERREUR SYSTÈME","TERMINÉ"];
-const errors=["⚠️","ERROR 0xA94F","ACCESS DENIED","SYSTEM FAILURE"];
-
-let q=0,h=0, chaos;
+const hackMsgs=[
+  "HACK EN COURS","SYSTÈME COMPROMIS","ERREUR FATALE","ACCÈS TOTAL","TERMINÉ"
+];
+let q=0,h=0;
+let errorInterval;
 
 window.onload=()=>intro.style.display="block";
 
@@ -210,7 +192,7 @@ function spawnQuestionEmoji(){
   e.innerHTML="💍";
   e.style.left=Math.random()*80+"%";
   e.style.bottom="10px";
-  e.style.fontSize=22+Math.random()*22+"px";
+  e.style.fontSize=24+Math.random()*20+"px";
   question.appendChild(e);
   setTimeout(()=>e.remove(),3000);
 }
@@ -229,20 +211,19 @@ function nextQuestion(){
   },800);
 }
 
-function spawnHackChaos(){
+function spawnError(){
   const e=document.createElement("div");
-  e.className="hackChaos";
-  e.innerHTML=errors[Math.floor(Math.random()*errors.length)];
+  e.className="error";
+  e.innerHTML=Math.random()>0.5?"⚠️ ERREUR":"SYSTEM ERROR";
   e.style.left=Math.random()*100+"vw";
   e.style.top=Math.random()*100+"vh";
-  e.style.fontSize=14+Math.random()*26+"px";
   document.body.appendChild(e);
-  setTimeout(()=>e.remove(),2500);
+  setTimeout(()=>e.remove(),1500);
 }
 
 function startHack(){
   hack.style.display="block";
-  chaos=setInterval(spawnHackChaos,70);
+  errorInterval=setInterval(spawnError,100);
 
   const i=setInterval(()=>{
     hackTop.innerText=hackMsgs[h];
@@ -250,8 +231,8 @@ function startHack(){
     h++;
     if(h>=hackMsgs.length){
       clearInterval(i);
-      clearInterval(chaos);
-      document.querySelectorAll(".hackChaos").forEach(e=>e.remove());
+      clearInterval(errorInterval);
+      document.querySelectorAll(".error").forEach(e=>e.remove());
       setTimeout(()=>{
         hack.style.display="none";
         finalEnvelope.style.display="flex";
@@ -261,28 +242,7 @@ function startHack(){
 }
 
 function openFinal(){
-  finalEnvelope.innerHTML=`
-    <div class="finalCard">
-      <h1 id="typeText"></h1>
-      <p id="subText">Joyeuse Saint Chaimaa Beauté 💖</p>
-    </div>`;
-  typeWriter("Je t’aime ❤️","typeText",120,()=>{
-    document.getElementById("subText").style.opacity=1;
-  });
   setInterval(spawnHeart,250);
-}
-
-function typeWriter(text,id,speed,cb){
-  let i=0;
-  const el=document.getElementById(id);
-  el.innerHTML="";
-  const t=setInterval(()=>{
-    el.innerHTML+=text.charAt(i++);
-    if(i>=text.length){
-      clearInterval(t);
-      cb&&cb();
-    }
-  },speed);
 }
 
 function spawnHeart(){
