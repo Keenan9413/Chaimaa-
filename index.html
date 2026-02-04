@@ -111,19 +111,19 @@ button{
   50%{opacity:0;}
 }
 
-/* ===== HACK CHAOS ===== */
-.hackEmoji, .hackError{
-  position:absolute;
+/* ===== CHAOS HACK (VISIBLE PARTOUT) ===== */
+.hackChaos{
+  position:fixed;
+  z-index:9999;
   color:red;
   font-weight:bold;
-  animation:chaos 2.5s linear forwards;
   pointer-events:none;
-  z-index:3;
+  animation:chaos 2.5s linear forwards;
 }
 @keyframes chaos{
-  from{opacity:0;transform:scale(.5)}
+  from{opacity:0;transform:scale(.6)}
   20%{opacity:1}
-  to{opacity:0;transform:translateY(-60px) scale(1.2)}
+  to{opacity:0;transform:translateY(-80px) scale(1.2)}
 }
 
 /* ===== ENVELOPPE FINALE ===== */
@@ -152,7 +152,7 @@ button{
   50%{transform:scale(1.05)}
 }
 
-/* ===== CARTE FINALE ===== */
+/* ===== FINAL ===== */
 .finalCard{
   background:#ffe4ef;
   border-radius:28px;
@@ -162,8 +162,6 @@ button{
   text-align:center;
   box-shadow:0 20px 40px rgba(0,0,0,.25);
   animation:zoomIn 1s ease forwards;
-  position:relative;
-  z-index:5;
 }
 @keyframes zoomIn{
   from{transform:scale(.6);opacity:0}
@@ -173,7 +171,6 @@ button{
 .finalCard h1{
   color:#ff3f87;
   font-size:34px;
-  min-height:42px;
 }
 .finalCard p{
   color:#ff3f87;
@@ -238,9 +235,9 @@ const questions=[
   "T’es sûre ? 🤍"
 ];
 const hackMsgs=["TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","ERREUR SYSTÈME","TERMINÉ"];
-const errors=["ERROR 0xA94F","ACCESS DENIED","MEMORY CORRUPTED","FATAL EXCEPTION","SYSTEM FAILURE"];
+const errors=["ERROR 0xA94F","ACCESS DENIED","SYSTEM FAILURE","MEMORY CORRUPTED","⚠️"];
 
-let q=0,h=0, chaosInterval;
+let q=0,h=0, chaos;
 
 window.onload=()=>intro.style.display="block";
 
@@ -277,18 +274,18 @@ function nextQuestion(){
 
 function spawnHackChaos(){
   const e=document.createElement("div");
-  e.className=Math.random()>.5?"hackEmoji":"hackError";
-  e.innerHTML=Math.random()>.5?"⚠️":errors[Math.floor(Math.random()*errors.length)];
+  e.className="hackChaos";
+  e.innerHTML=errors[Math.floor(Math.random()*errors.length)];
   e.style.left=Math.random()*100+"vw";
   e.style.top=Math.random()*100+"vh";
-  e.style.fontSize=18+Math.random()*28+"px";
+  e.style.fontSize=16+Math.random()*30+"px";
   document.body.appendChild(e);
   setTimeout(()=>e.remove(),2500);
 }
 
 function startHack(){
   hack.style.display="block";
-  chaosInterval=setInterval(spawnHackChaos,80);
+  chaos=setInterval(spawnHackChaos,70);
 
   const i=setInterval(()=>{
     hackTop.innerText=hackMsgs[h];
@@ -296,7 +293,7 @@ function startHack(){
     h++;
     if(h>=hackMsgs.length){
       clearInterval(i);
-      clearInterval(chaosInterval);
+      clearInterval(chaos);
       setTimeout(()=>{
         hack.style.display="none";
         finalEnvelope.style.display="flex";
@@ -362,3 +359,4 @@ function moveNo(){
 
 </body>
 </html>
+
