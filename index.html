@@ -8,6 +8,7 @@
 <style>
 body{
   margin:0;
+  width:100vw;
   height:100vh;
   display:flex;
   justify-content:center;
@@ -18,7 +19,7 @@ body{
   transition:background 1s ease;
 }
 
-/* ===== FOND IMAGE FINAL ===== */
+/* ===== FOND FINAL ===== */
 body.finalBg{
   background:url("IMG_1083.jpeg") center/cover no-repeat;
 }
@@ -35,10 +36,9 @@ body.finalBg{
   box-shadow:0 10px 30px rgba(0,0,0,.3);
   position:relative;
   z-index:5;
-  overflow:hidden;
 }
 
-/* ===== INTRO ===== */
+/* ===== ENVELOPPE ===== */
 .envelopeIntro{
   width:200px;
   cursor:pointer;
@@ -104,7 +104,6 @@ button{
   height:100%;
   width:0%;
   background:red;
-  transition:width .7s linear;
 }
 .hackProgressText{
   margin-top:10px;
@@ -120,17 +119,11 @@ button{
 /* ===== ENVELOPPE FINALE ===== */
 #finalEnvelope{
   display:none;
+  position:absolute;
+  inset:0;
   justify-content:center;
   align-items:center;
-}
-.finalEnvelope{
-  width:220px;
-  cursor:pointer;
-  animation:pulse 1.6s infinite;
-}
-@keyframes pulse{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.05)}
+  z-index:10;
 }
 
 /* ===== CARTE FINALE ===== */
@@ -148,29 +141,20 @@ button{
   from{transform:scale(.6);opacity:0}
   to{transform:scale(1);opacity:1}
 }
-
 .finalCard h1{
   color:#ff3f87;
   font-size:34px;
-  min-height:42px;
-}
-.finalCard p{
-  color:#ff3f87;
-  font-size:20px;
-  opacity:0;
-  transition:opacity 1s ease;
 }
 
 /* ===== COEURS ===== */
 .heart{
   position:absolute;
   animation:floatHeart 6s linear forwards;
-  opacity:.8;
 }
 @keyframes floatHeart{
-  from{transform:translateY(40px) scale(.6);opacity:0}
-  20%{opacity:.8}
-  to{transform:translateY(-120px) scale(1);opacity:0}
+  from{transform:translateY(40px);opacity:0}
+  20%{opacity:1}
+  to{transform:translateY(-120px);opacity:0}
 }
 </style>
 </head>
@@ -198,8 +182,8 @@ button{
   </div>
 </div>
 
-<div class="card" id="finalEnvelope">
-  <img src="IMG_5431.jpeg" class="finalEnvelope" onclick="openFinal()">
+<div id="finalEnvelope">
+  <img src="IMG_5431.jpeg" class="envelopeIntro" onclick="openFinal()">
 </div>
 
 <script>
@@ -226,7 +210,6 @@ function spawnQuestionEmoji(){
   e.innerHTML="💍";
   e.style.left=Math.random()*80+"%";
   e.style.bottom="10px";
-  e.style.fontSize=22+Math.random()*22+"px";
   question.appendChild(e);
   setTimeout(()=>e.remove(),3000);
 }
@@ -257,7 +240,7 @@ function startHack(){
         hack.style.display="none";
         document.body.classList.add("finalBg");
         finalEnvelope.style.display="flex";
-      },900);
+      },800);
     }
   },900);
 }
@@ -266,26 +249,17 @@ function openFinal(){
   finalEnvelope.innerHTML=`
     <div class="finalCard">
       <h1 id="typeText"></h1>
-      <p id="subText">Joyeuse Saint Chaimaa Beauté 💖</p>
     </div>`;
-
-  typeWriter("Je t’aime ❤️","typeText",120,()=>{
-    document.getElementById("subText").style.opacity=1;
-  });
-
+  typeWriter("Je t’aime ❤️","typeText",120);
   setInterval(spawnHeart,250);
 }
 
-function typeWriter(text,id,speed,cb){
+function typeWriter(text,id,speed){
   let i=0;
   const el=document.getElementById(id);
-  el.innerHTML="";
   const t=setInterval(()=>{
     el.innerHTML+=text.charAt(i++);
-    if(i>=text.length){
-      clearInterval(t);
-      cb&&cb();
-    }
+    if(i>=text.length) clearInterval(t);
   },speed);
 }
 
@@ -295,7 +269,6 @@ function spawnHeart(){
   h.innerHTML="❤️";
   h.style.left=Math.random()*100+"vw";
   h.style.top=Math.random()*100+"vh";
-  h.style.fontSize=16+Math.random()*26+"px";
   document.body.appendChild(h);
   setTimeout(()=>h.remove(),6000);
 }
