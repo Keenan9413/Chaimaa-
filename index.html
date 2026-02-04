@@ -15,6 +15,12 @@ body{
   background:linear-gradient(135deg,#ff9acb,#ff5fa2);
   font-family:Arial,sans-serif;
   overflow:hidden;
+  transition:background 1s ease;
+}
+
+/* ===== FOND IMAGE FINAL ===== */
+body.finalBg{
+  background:url("IMG_1083.jpeg") center/cover no-repeat;
 }
 
 /* ===== CARTES ===== */
@@ -29,9 +35,10 @@ body{
   box-shadow:0 10px 30px rgba(0,0,0,.3);
   position:relative;
   z-index:5;
+  overflow:hidden;
 }
 
-/* ===== ENVELOPPE INTRO ===== */
+/* ===== INTRO ===== */
 .envelopeIntro{
   width:200px;
   cursor:pointer;
@@ -66,7 +73,7 @@ button{
   to{transform:translateY(-80px);opacity:0}
 }
 
-/* ===== HACK ===== */
+/* ===== HACK (INCHANGÉ) ===== */
 #hack{
   background:black;
   color:red;
@@ -75,9 +82,8 @@ button{
 }
 @keyframes blink{
   from{transform:scale(1);}
-  to{transform:scale(1.05);}
+  to{transform:scale(1.06);}
 }
-
 .hackBox{animation:shake .12s infinite;}
 @keyframes shake{
   0%{transform:translate(0,0);}
@@ -86,7 +92,6 @@ button{
   75%{transform:translate(4px,4px);}
   100%{transform:translate(0,0);}
 }
-
 .progress{
   width:100%;
   height:14px;
@@ -99,32 +104,61 @@ button{
   height:100%;
   width:0%;
   background:red;
-  transition:width .6s linear;
+  transition:width .7s linear;
 }
-
-/* ===== ERREURS AUTOUR ===== */
-.error{
-  position:absolute;
-  color:red;
-  font-size:14px;
+.hackProgressText{
+  margin-top:10px;
+  font-size:13px;
   font-weight:bold;
-  animation:errorFlash .4s infinite;
-  pointer-events:none;
+  animation:flash .6s infinite;
 }
-@keyframes errorFlash{
+@keyframes flash{
   0%,100%{opacity:1;}
   50%{opacity:0;}
 }
 
-/* ===== ENVELOPPE FINALE (RESET TOTAL) ===== */
+/* ===== ENVELOPPE FINALE ===== */
 #finalEnvelope{
-  all:unset;
-  position:absolute;
-  inset:0;
   display:none;
   justify-content:center;
   align-items:center;
-  z-index:10;
+}
+.finalEnvelope{
+  width:220px;
+  cursor:pointer;
+  animation:pulse 1.6s infinite;
+}
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+}
+
+/* ===== CARTE FINALE ===== */
+.finalCard{
+  background:#ffe4ef;
+  border-radius:28px;
+  padding:35px 25px;
+  width:90%;
+  max-width:420px;
+  text-align:center;
+  box-shadow:0 20px 40px rgba(0,0,0,.25);
+  animation:zoomIn 1s ease forwards;
+}
+@keyframes zoomIn{
+  from{transform:scale(.6);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+.finalCard h1{
+  color:#ff3f87;
+  font-size:34px;
+  min-height:42px;
+}
+.finalCard p{
+  color:#ff3f87;
+  font-size:20px;
+  opacity:0;
+  transition:opacity 1s ease;
 }
 
 /* ===== COEURS ===== */
@@ -158,13 +192,14 @@ button{
 <div class="card" id="hack">
   <div class="hackBox">
     <h2 id="hackTop">TRÈS BIEN</h2>
-    <p>JE VAIS TE HACKER ⚠️</p>
+    <p>JE VAIS TE HACKER MAINTENANT ⚠️</p>
     <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="hackProgressText">HACK PROGRESS…</div>
   </div>
 </div>
 
-<div id="finalEnvelope">
-  <img src="IMG_5431.jpeg" class="envelopeIntro" onclick="openFinal()">
+<div class="card" id="finalEnvelope">
+  <img src="IMG_5431.jpeg" class="finalEnvelope" onclick="openFinal()">
 </div>
 
 <script>
@@ -174,10 +209,9 @@ const questions=[
   "T’es sûre ? 🤍"
 ];
 const hackMsgs=[
-  "HACK EN COURS","SYSTÈME COMPROMIS","ERREUR FATALE","ACCÈS TOTAL","TERMINÉ"
+  "TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","ERREUR SYSTÈME","TERMINÉ"
 ];
 let q=0,h=0;
-let errorInterval;
 
 window.onload=()=>intro.style.display="block";
 
@@ -192,7 +226,7 @@ function spawnQuestionEmoji(){
   e.innerHTML="💍";
   e.style.left=Math.random()*80+"%";
   e.style.bottom="10px";
-  e.style.fontSize=24+Math.random()*20+"px";
+  e.style.fontSize=22+Math.random()*22+"px";
   question.appendChild(e);
   setTimeout(()=>e.remove(),3000);
 }
@@ -211,38 +245,48 @@ function nextQuestion(){
   },800);
 }
 
-function spawnError(){
-  const e=document.createElement("div");
-  e.className="error";
-  e.innerHTML=Math.random()>0.5?"⚠️ ERREUR":"SYSTEM ERROR";
-  e.style.left=Math.random()*100+"vw";
-  e.style.top=Math.random()*100+"vh";
-  document.body.appendChild(e);
-  setTimeout(()=>e.remove(),1500);
-}
-
 function startHack(){
   hack.style.display="block";
-  errorInterval=setInterval(spawnError,100);
-
   const i=setInterval(()=>{
     hackTop.innerText=hackMsgs[h];
     bar.style.width=((h+1)/hackMsgs.length)*100+"%";
     h++;
     if(h>=hackMsgs.length){
       clearInterval(i);
-      clearInterval(errorInterval);
-      document.querySelectorAll(".error").forEach(e=>e.remove());
       setTimeout(()=>{
         hack.style.display="none";
+        document.body.classList.add("finalBg");
         finalEnvelope.style.display="flex";
-      },800);
+      },900);
     }
   },900);
 }
 
 function openFinal(){
+  finalEnvelope.innerHTML=`
+    <div class="finalCard">
+      <h1 id="typeText"></h1>
+      <p id="subText">Joyeuse Saint Chaimaa Beauté 💖</p>
+    </div>`;
+
+  typeWriter("Je t’aime ❤️","typeText",120,()=>{
+    document.getElementById("subText").style.opacity=1;
+  });
+
   setInterval(spawnHeart,250);
+}
+
+function typeWriter(text,id,speed,cb){
+  let i=0;
+  const el=document.getElementById(id);
+  el.innerHTML="";
+  const t=setInterval(()=>{
+    el.innerHTML+=text.charAt(i++);
+    if(i>=text.length){
+      clearInterval(t);
+      cb&&cb();
+    }
+  },speed);
 }
 
 function spawnHeart(){
