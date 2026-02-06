@@ -55,62 +55,33 @@ body.questions-bg{
   z-index:15;
 }
 
-/* ===== QUESTIONS EN BAS ===== */
+/* INTRO TEXTE COMME AVANT */
+.introTitle{
+  font-size:30px;
+  font-weight:900;
+  margin-bottom:15px;
+}
+
+/* ===== QUESTIONS ===== */
 #question{
   bottom:25px;
   z-index:10;
   overflow:hidden;
 }
 
-/* ===== HACK CENTRÉ ===== */
+/* ===== HACK ===== */
 #hack{
   top:50%;
   transform:translate(-50%,-50%);
   background:black;
   color:red;
   border:4px solid red;
-  animation:blink .15s infinite alternate;
   z-index:15;
+  animation:blink .15s infinite alternate;
 }
 @keyframes blink{
   from{transform:translate(-50%,-50%) scale(1);}
   to{transform:translate(-50%,-50%) scale(1.06);}
-}
-.hackBox{animation:shake .12s infinite;}
-@keyframes shake{
-  0%{transform:translate(0,0);}
-  25%{transform:translate(4px,-4px);}
-  50%{transform:translate(-4px,4px);}
-  75%{transform:translate(4px,4px);}
-  100%{transform:translate(0,0);}
-}
-.progress{
-  width:100%;
-  height:14px;
-  background:#330000;
-  border-radius:10px;
-  overflow:hidden;
-}
-.bar{
-  height:100%;
-  width:0%;
-  background:red;
-  transition:width .7s linear;
-}
-
-/* ===== CHAOS ===== */
-.hackChaos{
-  position:fixed;
-  z-index:5;
-  color:red;
-  font-weight:bold;
-  pointer-events:none;
-  animation:chaos 2.5s linear forwards;
-}
-@keyframes chaos{
-  from{opacity:0;transform:scale(.6)}
-  20%{opacity:1}
-  to{opacity:0;transform:translateY(-80px) scale(1.2)}
 }
 
 /* ===== ENVELOPPE ===== */
@@ -226,11 +197,8 @@ button{
 </div>
 
 <div class="card" id="hack">
-  <div class="hackBox">
-    <h2 id="hackTop">TRÈS BIEN</h2>
-    <p>JE VAIS TE HACKER MAINTENANT ⚠️</p>
-    <div class="progress"><div class="bar" id="bar"></div></div>
-  </div>
+  <h2>TRÈS BIEN</h2>
+  <p>JE VAIS TE HACKER MAINTENANT ⚠️</p>
 </div>
 
 <div id="final">
@@ -251,10 +219,8 @@ const questions=[
   "T’es sûre ? 🤍"
 ];
 const emojis=["💍","😘","🤍"];
-const hackMsgs=["TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","ERREUR SYSTÈME","TERMINÉ"];
-const errors=["ERROR 0xA94F","ACCESS DENIED","SYSTEM FAILURE","⚠️","DATA LOST"];
 
-let q=0,h=0,chaos;
+let q=0;
 
 window.onload=()=>intro.style.display="block";
 
@@ -282,39 +248,20 @@ function nextQuestion(){
       qText.innerText=questions[q];
     }else{
       question.style.display="none";
+      title.style.display="none";
       startHack();
     }
   },800);
 }
 
-function spawnHackChaos(){
-  const e=document.createElement("div");
-  e.className="hackChaos";
-  e.innerHTML=errors[Math.floor(Math.random()*errors.length)];
-  e.style.left=Math.random()*100+"vw";
-  e.style.top=Math.random()*100+"vh";
-  document.body.appendChild(e);
-  setTimeout(()=>e.remove(),2500);
-}
-
 function startHack(){
   document.body.classList.remove("questions-bg");
-  document.body.style.background="linear-gradient(135deg,#ff9acb,#ff5fa2)";
   hack.style.display="block";
-  chaos=setInterval(spawnHackChaos,70);
-
-  const i=setInterval(()=>{
-    hackTop.innerText=hackMsgs[h];
-    bar.style.width=((h+1)/hackMsgs.length)*100+"%";
-    h++;
-    if(h>=hackMsgs.length){
-      clearInterval(i);
-      clearInterval(chaos);
-      hack.style.display="none";
-      document.body.style.background="url('IMG_1083.jpeg') center/cover no-repeat";
-      final.style.display="flex";
-    }
-  },900);
+  setTimeout(()=>{
+    hack.style.display="none";
+    document.body.style.background="url('IMG_1083.jpeg') center/cover no-repeat";
+    final.style.display="flex";
+  },3500);
 }
 
 function openFinal(){
