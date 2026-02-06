@@ -43,71 +43,29 @@ body.questions-bg{
   max-width:360px;
   text-align:center;
   box-shadow:0 10px 30px rgba(0,0,0,.3);
-  position:relative;
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
 }
 
 /* ===== INTRO ===== */
 #intro{
-  position:fixed;
   top:50%;
-  left:50%;
   transform:translate(-50%,-50%);
   z-index:15;
 }
 
-.introTitle{
-  font-size:30px;
-  font-weight:900;
-  margin-bottom:15px;
-}
-
 /* ===== QUESTIONS EN BAS ===== */
 #question{
-  position:fixed;
   bottom:25px;
-  left:50%;
-  transform:translateX(-50%);
   z-index:10;
   overflow:hidden;
 }
 
-/* ===== ENVELOPPE ===== */
-.envelope{
-  width:200px;
-  cursor:pointer;
-  animation:bounce 1.4s infinite;
-}
-@keyframes bounce{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-10px);}
-}
-
-/* ===== BOUTONS ===== */
-button{
-  padding:12px 22px;
-  border:none;
-  border-radius:25px;
-  font-size:16px;
-  cursor:pointer;
-  margin:10px;
-}
-#yes{background:#ff4081;color:white;}
-#no{background:#ccc;position:absolute}
-
-/* ===== EMOJIS QUESTIONS ===== */
-.qEmoji{
-  position:absolute;
-  animation:floatQ 3s ease-out forwards;
-  pointer-events:none;
-}
-@keyframes floatQ{
-  from{transform:translateY(20px);opacity:0}
-  20%{opacity:1}
-  to{transform:translateY(-80px);opacity:0}
-}
-
-/* ===== HACK ===== */
+/* ===== HACK CENTRÉ ===== */
 #hack{
+  top:50%;
+  transform:translate(-50%,-50%);
   background:black;
   color:red;
   border:4px solid red;
@@ -115,8 +73,8 @@ button{
   z-index:15;
 }
 @keyframes blink{
-  from{transform:scale(1);}
-  to{transform:scale(1.06);}
+  from{transform:translate(-50%,-50%) scale(1);}
+  to{transform:translate(-50%,-50%) scale(1.06);}
 }
 .hackBox{animation:shake .12s infinite;}
 @keyframes shake{
@@ -143,15 +101,51 @@ button{
 /* ===== CHAOS ===== */
 .hackChaos{
   position:fixed;
+  z-index:5;
   color:red;
   font-weight:bold;
   pointer-events:none;
   animation:chaos 2.5s linear forwards;
 }
 @keyframes chaos{
-  from{opacity:0}
+  from{opacity:0;transform:scale(.6)}
   20%{opacity:1}
-  to{opacity:0;transform:translateY(-80px)}
+  to{opacity:0;transform:translateY(-80px) scale(1.2)}
+}
+
+/* ===== ENVELOPPE ===== */
+.envelope{
+  width:200px;
+  cursor:pointer;
+  animation:bounce 1.4s infinite;
+}
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-10px);}
+}
+
+/* ===== BOUTONS ===== */
+button{
+  padding:12px 22px;
+  border:none;
+  border-radius:25px;
+  font-size:16px;
+  cursor:pointer;
+  margin:10px;
+}
+#yes{background:#ff4081;color:white;}
+#no{background:#ccc;position:absolute}
+
+/* ===== EMOJIS ===== */
+.qEmoji{
+  position:absolute;
+  animation:floatQ 3s ease-out forwards;
+  pointer-events:none;
+}
+@keyframes floatQ{
+  from{transform:translateY(20px);opacity:0}
+  20%{opacity:1}
+  to{transform:translateY(-80px);opacity:0}
 }
 
 /* ===== FINAL ===== */
@@ -164,6 +158,12 @@ button{
   z-index:20;
 }
 
+.finalBox{
+  position:relative;
+  cursor:pointer;
+}
+
+/* ===== FEUILLE ===== */
 .paper{
   position:absolute;
   width:170px;
@@ -174,6 +174,7 @@ button{
   transform:translateX(-50%) translateY(50px);
   border-radius:8px;
   opacity:0;
+  box-shadow:0 8px 18px rgba(0,0,0,.25);
   padding:12px;
   text-align:center;
 }
@@ -191,7 +192,7 @@ button{
   animation:blinkCursor 1s infinite;
 }
 @keyframes blinkCursor{
-  0%,50{opacity:1}
+  0%,50%{opacity:1}
   51%,100%{opacity:0}
 }
 
@@ -227,18 +228,33 @@ button{
 <div class="card" id="hack">
   <div class="hackBox">
     <h2 id="hackTop">TRÈS BIEN</h2>
+    <p>JE VAIS TE HACKER MAINTENANT ⚠️</p>
     <div class="progress"><div class="bar" id="bar"></div></div>
   </div>
 </div>
 
 <div id="final">
-  <img src="IMG_5431.jpeg" class="envelope">
+  <div class="finalBox" onclick="openFinal()">
+    <img src="IMG_5431.jpeg" class="envelope">
+    <div class="paper" id="paper">
+      <h1 id="typeText"></h1><span class="cursor" id="cursor"></span>
+      <p id="line1">Joyeuse Saint Chaimaa</p>
+      <p id="line2">Beauté 💖</p>
+    </div>
+  </div>
 </div>
 
 <script>
-const questions=["Veux-tu être ma future femme ? 💍","Réfléchis bien… 😘","T’es sûre ? 🤍"];
+const questions=[
+  "Veux-tu être ma future femme ? 💍",
+  "Réfléchis bien… 😘",
+  "T’es sûre ? 🤍"
+];
 const emojis=["💍","😘","🤍"];
-let q=0,h=0;
+const hackMsgs=["TRÈS BIEN","HACK EN COURS","SYSTÈME COMPROMIS","ERREUR SYSTÈME","TERMINÉ"];
+const errors=["ERROR 0xA94F","ACCESS DENIED","SYSTEM FAILURE","⚠️","DATA LOST"];
+
+let q=0,h=0,chaos;
 
 window.onload=()=>intro.style.display="block";
 
@@ -271,19 +287,72 @@ function nextQuestion(){
   },800);
 }
 
+function spawnHackChaos(){
+  const e=document.createElement("div");
+  e.className="hackChaos";
+  e.innerHTML=errors[Math.floor(Math.random()*errors.length)];
+  e.style.left=Math.random()*100+"vw";
+  e.style.top=Math.random()*100+"vh";
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),2500);
+}
+
 function startHack(){
   document.body.classList.remove("questions-bg");
+  document.body.style.background="linear-gradient(135deg,#ff9acb,#ff5fa2)";
   hack.style.display="block";
+  chaos=setInterval(spawnHackChaos,70);
+
   const i=setInterval(()=>{
-    bar.style.width=((h+1)/5)*100+"%";
+    hackTop.innerText=hackMsgs[h];
+    bar.style.width=((h+1)/hackMsgs.length)*100+"%";
     h++;
-    if(h>=5){
+    if(h>=hackMsgs.length){
       clearInterval(i);
+      clearInterval(chaos);
       hack.style.display="none";
       document.body.style.background="url('IMG_1083.jpeg') center/cover no-repeat";
       final.style.display="flex";
     }
-  },800);
+  },900);
+}
+
+function openFinal(){
+  paper.style.opacity=1;
+  paper.style.transform="translateX(-50%) translateY(-25px)";
+  paper.style.transition="all 1s ease";
+
+  setTimeout(()=>{
+    typeWriter("Je t’aime ❤️","typeText",120,()=>{
+      cursor.style.display="none";
+      line1.style.opacity=1;
+      setTimeout(()=>line2.style.opacity=1,600);
+    });
+    setInterval(spawnHeart,250);
+  },900);
+}
+
+function typeWriter(text,id,speed,cb){
+  let i=0;
+  const el=document.getElementById(id);
+  el.innerHTML="";
+  const t=setInterval(()=>{
+    el.innerHTML+=text.charAt(i++);
+    if(i>=text.length){
+      clearInterval(t);
+      cb&&cb();
+    }
+  },speed);
+}
+
+function spawnHeart(){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML="❤️";
+  h.style.left=Math.random()*100+"vw";
+  h.style.top=Math.random()*100+"vh";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
 }
 
 function moveNo(){
