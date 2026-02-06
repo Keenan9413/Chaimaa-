@@ -56,6 +56,7 @@ body.questions-bg{
   bottom:25px;
   left:50%;
   transform:translateX(-50%);
+  overflow:hidden; /* 👈 FIX ICI : emojis restent dans le rectangle */
 }
 
 /* ===== INTRO ===== */
@@ -363,26 +364,4 @@ function typeWriter(text,id,speed,cb){
   const t=setInterval(()=>{
     el.innerHTML+=text.charAt(i++);
     if(i>=text.length){
-      clearInterval(t);
-      cb&&cb();
-    }
-  },speed);
-}
-
-function spawnHeart(){
-  const h=document.createElement("div");
-  h.className="heart";
-  h.innerHTML="❤️";
-  h.style.left=Math.random()*100+"vw";
-  h.style.top=Math.random()*100+"vh";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),6000);
-}
-
-function moveNo(){
-  no.style.transform=`translate(${Math.random()*120-60}px,${Math.random()*80-40}px)`;
-}
-</script>
-
-</body>
-</html>
+      clearInterval
