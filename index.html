@@ -18,6 +18,11 @@ body{
   transition:background 1s ease;
 }
 
+/* ===== FOND QUESTIONS ===== */
+body.questions-bg{
+  background:url("IMG_1785.jpeg") center/cover no-repeat;
+}
+
 /* ===== TITRE ===== */
 #title{
   position:fixed;
@@ -271,6 +276,9 @@ window.onload=()=>intro.style.display="block";
 function openIntro(){
   intro.style.display="none";
   question.style.display="block";
+
+  // fond image pendant les questions
+  document.body.classList.add("questions-bg");
 }
 
 function spawnQuestionEmoji(){
@@ -307,6 +315,10 @@ function spawnHackChaos(){
 }
 
 function startHack(){
+  // retour fond normal
+  document.body.classList.remove("questions-bg");
+  document.body.style.background="linear-gradient(135deg,#ff9acb,#ff5fa2)";
+
   title.style.display="none";
   hack.style.display="block";
   chaos=setInterval(spawnHackChaos,70);
