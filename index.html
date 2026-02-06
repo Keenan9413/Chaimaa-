@@ -50,6 +50,14 @@ body.questions-bg{
   z-index:5;
 }
 
+/* ===== QUESTIONS EN BAS ===== */
+#question{
+  position:fixed;
+  bottom:25px;
+  left:50%;
+  transform:translateX(-50%);
+}
+
 /* ===== INTRO ===== */
 .introTitle{
   font-size:30px;
@@ -276,8 +284,6 @@ window.onload=()=>intro.style.display="block";
 function openIntro(){
   intro.style.display="none";
   question.style.display="block";
-
-  // fond image pendant les questions
   document.body.classList.add("questions-bg");
 }
 
@@ -315,10 +321,8 @@ function spawnHackChaos(){
 }
 
 function startHack(){
-  // retour fond normal
   document.body.classList.remove("questions-bg");
   document.body.style.background="linear-gradient(135deg,#ff9acb,#ff5fa2)";
-
   title.style.display="none";
   hack.style.display="block";
   chaos=setInterval(spawnHackChaos,70);
